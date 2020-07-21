@@ -3,6 +3,19 @@ class Bunkakai extends Phaser.Scene{
         super("bunkakaiScene");
     }
 
+
+    // Loading screen technique
+    // constructor() {
+    //     super({key: "menuScene",
+    //         pack: {
+    //             files: [
+    //                 { type: 'image', key: 'loading', url: './Assets/loading_screen.png' }
+    //             ]
+    //         }});
+    // }
+    //
+    // this.add.image(0,0,"loading").setOrigin(0)
+
     preload(){
         // load splash screen
         this.load.image('splash_screen', './assets/bunkakaiText.png');

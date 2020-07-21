@@ -29,11 +29,13 @@ class Art extends Phaser.Scene {
         });
 
         // tile map assets
-        this.load.image('grass', './assets/grasstp.png');                   // grass tile sheet
-        this.load.tilemapTiledJSON('artMap', './assets/artMap.json');  // Tiled JSON file desu
+        this.load.image('grass', './assets/grassTiles.png');                   // grass tile sheet
+        this.load.tilemapTiledJSON('grassTilesMap', './assets/grassTilesMap.json');  // Tiled JSON file desu
     }
 
     create() {
+        this.utilities = new utilities(this); // add utils
+        // this.utilities.crissCross();
 
         // collectable flight path zones
         this.top = 128;
@@ -66,23 +68,31 @@ class Art extends Phaser.Scene {
         }
 
         // add ground/grass tile map
-        const groundMap = this.add.tilemap('artMap');
-        const tileset = groundMap.addTilesetImage('akgrass', 'grass');
+        // const groundMap = this.add.tilemap('artMap');
+        // const tileset = groundMap.addTilesetImage('akgrass', 'grass');
+        // const worldLayer = groundMap.createStaticLayer('grassLayer', tileset, 0, 0);
+
+        const groundMap = this.add.tilemap('grassTilesMap');
+        const tileset = groundMap.addTilesetImage('grassTiles', 'grass');
         const worldLayer = groundMap.createStaticLayer('grassLayer', tileset, 0, 0);
-        // console.log('groundMap ', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
+
+        console.log('groundMap ', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
 
         // set collisions
-        // groundLayer.setCollisionByProperty({ floor: true });
+        worldLayer.setCollisionByProperty({ collide: true });
 
-        // add player
-        this.playerOne = new Runner(this, 704, 575, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+        // add player 575
+        this.playerOne = new Runner(this, 704, 1500, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+        // add collider
+        this.physics.add.collider(this.playerOne, worldLayer);
+
 
         // follow playerOne with the camera
         this.cameras.main.startFollow(this.playerOne);
         this.cameras.main.followOffset.set(-256, 64);
         this.cameras.main.setDeadzone(0, 2048);
         // this.cameras.main.setBounds(0, 0, 1912, 1024);
-
+        // this.cameras.main. camera.ignore(gameObject);
         // add kokoro
         // this.myKokoro = new Kokoro(this, this.playerOne.x, this.playerOne.y, 'redHeart', 0).setScale(0.5, 0.5).setOrigin(0, 0);
         // this.myKokoro.alpha = 0;
@@ -109,6 +119,19 @@ class Art extends Phaser.Scene {
 
         // start playerOne animation
         this.playerOne.anims.play('playerAni');
+
+
+
+        const debugGraphics = this.add.graphics().setAlpha(0.75); 
+        worldLayer.renderDebug(debugGraphics, { 
+            tileColor: null,    // color of non-colliding tiles 
+            // collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),    // color of colliding tiles 
+            // faceColor: new Phaser.Display.Color(40, 39, 37, 255)                // color of colliding face edges 
+            //
+        }); 
+
+
+
 
         // Particle System
         // this.particles = this.add.particles('circle');
@@ -175,12 +198,17 @@ class Art extends Phaser.Scene {
             this.time.removeAllEvents();
             this.scene.start("menuScene");
         }
+        // check for collisions
+        // this.physics.world.collide(paddle, this.barrierGroup, this.paddleCollision, null, this);
 
         // update player
         this.playerOne.update();
 
         // debug scene change call
-        this.sceneChange();
+        this.utilities.sceneChange();
+        // if (this.BGMmusic.mute){
+        //     this.BGMmusic.mute = false;
+        // }
 
         // global audio mute
         this.muteAudio();
@@ -205,21 +233,18 @@ class Art extends Phaser.Scene {
         }
 
         // crissCross - evasive pattern for collectables
+        // if (this.clock.getElapsedSeconds() > 5) {
+        //     this.crissCross(this.collectableItem[0]);
+        //     this.crissCross(this.collectableItem[1]);
+        //     this.crissCross(this.collectableItem[2]);
+        // }
+
         if (this.clock.getElapsedSeconds() > 5) {
-            this.crissCross(this.collectableItem[0]);
-            this.crissCross(this.collectableItem[1]);
-            this.crissCross(this.collectableItem[2]);
+            this.utilities.crissCross(this.collectableItem[0]);
+            this.utilities.crissCross(this.collectableItem[1]);
+            this.utilities.crissCross(this.collectableItem[2]);
         }
 
-        // change the sky
-        // console.log(this.time.now);
-        if (this.clock.getElapsedSeconds() > 10 && this.clock.getElapsedSeconds() < 40) {
-            this.nightSky.alpha = 1;
-            this.sky.alpha -= .001;
-        } else {
-            this.sky.alpha += .001;
-            this.nightSky.alpha -= .005;
-        }
 
         // Love ani movement
         // if (this.boom){ // explosion movement
@@ -245,12 +270,12 @@ class Art extends Phaser.Scene {
         // }
     }
 
-    checkCollision(sprite, collectable) {
+    checkCollision(objectOne, objectTwo) {
         // AABB bounds checking - simple AABB checking
-        if (sprite.x < collectable.x + collectable.width &&
-            sprite.x + sprite.width > collectable.x &&
-            sprite.y < collectable.y + collectable.height &&
-            sprite.height + sprite.y > collectable.y) {
+        if (objectOne.x < objectTwo.x + objectTwo.width &&
+            objectOne.x + objectOne.width > objectTwo.x &&
+            objectOne.y < objectTwo.y + objectTwo.height &&
+            objectOne.height + objectOne.y > objectTwo.y) {
             return true;
         } else {
             return false;
@@ -261,7 +286,6 @@ class Art extends Phaser.Scene {
         // collectable.alpha = 0;                             // temporarily hid ship
         // create explosion sprite at ship's position
         this.boom = this.add.sprite(collectable.x, collectable.y, 'explosion').setOrigin(0, 0);
-
         this.boom.anims.play('explode');            // play explode animation
         this.boom.on('animationcomplete', () => {   // callback after animation completes
             // collectable.reset();                           // reset ship position
@@ -287,41 +311,6 @@ class Art extends Phaser.Scene {
         collectable.reset(); // reset ship position
     }
 
-    crissCross(collectable) { // special thanks to Darcy for helping me with this one!!!
-        if (collectable.direction) {
-            // make collectable go up - later this could be a function
-            collectable.y -= .5;
-            // collectable.y -= Math.sin(collectable.x);
-            // this.y = Math.sin(this.x) * n + this.initialY
-            if (collectable.y <= this.top) {
-                collectable.direction = false;
-            }
-            return;
-
-        } else if (!collectable.direction) {
-            // make collectable go down - later this could be a function
-            collectable.y += .5;
-            // collectable.y += Math.sin(collectable.x);
-            if (collectable.y >= this.bottom) {
-                collectable.direction = true;
-            }
-            return;
-        }
-    }
-
-    // crissCross(collectable) { // special thanks to Darcy for helping me with this one!!!
-    //     // if (collectable.direction) {
-    //         // make collectable go up - later this could be a function
-    //         // collectable.y -= .5;
-    //         // collectable.y -= Math.sin(collectable.x);
-    //     collectable.y = (Math.sin(collectable.x) * 10 + collectable.y) ;
-    //         // if (collectable.y <= this.top) {
-    //         //     collectable.direction = false;
-    //         // }
-    //         // return;
-    //
-    //     // }
-    // }
 
     // display kokoro - this should probably have been a switch statement
     kokoroMeter(capturedHearts) {
@@ -353,23 +342,6 @@ class Art extends Phaser.Scene {
         }
     }
 
-    // debug scene change code
-    sceneChange() {
-        if (Phaser.Input.Keyboard.JustDown(keyF)) {
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("fashionScene");
-        }
-        if (Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("musicScene");
-        }
-    }
 
     muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {

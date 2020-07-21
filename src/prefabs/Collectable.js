@@ -1,10 +1,11 @@
 // Collectable prefab
-class Collectable extends Phaser.GameObjects.Sprite{
+class Collectable extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, texture, frame, pointValue, direction) {
         super(scene, x, y, texture, frame);
         this.direction = direction;
         // add object to the existing scene
         scene.add.existing(this);
+        scene.physics.add.existing(this);
 
         // store point value
         this.points = pointValue;
@@ -23,3 +24,5 @@ class Collectable extends Phaser.GameObjects.Sprite{
         this.alpha = 1;
     }
 }
+
+// this.body.setAllowGravity(false) // to turn on/off physics on a sprite
