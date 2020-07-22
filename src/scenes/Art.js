@@ -34,6 +34,15 @@ class Art extends Phaser.Scene {
     }
 
     create() {
+        // create the sine counter
+        this.sineCounter = this.tweens.addCounter({
+            from: 0.5,
+            to: 1.5,
+            duration: this.SINE_DURATION,
+            ease: 'Sine.easeInOut',
+            repeat: 3,
+            yoyo: true
+        });
         this.utilities = new utilities(this); // add utils
         // this.utilities.crissCross();
 
@@ -333,7 +342,7 @@ class Art extends Phaser.Scene {
     }
 
     kokoroDropped() {
-        console.log('the kokoro has been dropped')
+        console.log('the kokoro has been dropped');
         this.displayKokoro[this.kokoros - 1].setVisible(false);
         this.kokoros -= 1;
         this.capturedHearts -= 10;
@@ -341,7 +350,12 @@ class Art extends Phaser.Scene {
             this.capturedHearts = 0;
         }
     }
-
+    // make the hearts pulse
+    this.displayKokoro[0].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+    this.displayKokoro[1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+    this.displayKokoro[2].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+    this.displayKokoro[3].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+    this.displayKokoro[4].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
 
     muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
