@@ -112,11 +112,11 @@ class Art extends Phaser.Scene {
             new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false)];
 
         // add display hearts - normally these are setVisibale to false
-        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true)];
+        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false)];
 
         // playerOne animation config
         this.anims.create({
@@ -338,6 +338,7 @@ class Art extends Phaser.Scene {
         if (capturedHearts % 10 == 0 && capturedHearts < 55) {
             this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
             this.kokoros += 1;
+            this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
         }
     }
 
@@ -350,14 +351,9 @@ class Art extends Phaser.Scene {
             this.capturedHearts = 0;
         }
     }
-    // make the hearts pulse
-    this.displayKokoro[0].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
-    this.displayKokoro[1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
-    this.displayKokoro[2].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
-    this.displayKokoro[3].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
-    this.displayKokoro[4].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
-
-    muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
+    
+    
+    /*muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
         //     if (!this.game.sound.mute) {
         //         this.game.sound.mute = true;
@@ -365,5 +361,5 @@ class Art extends Phaser.Scene {
         //         this.game.sound = false;
         //     }
         // }
-    }
+    }*/
 }
