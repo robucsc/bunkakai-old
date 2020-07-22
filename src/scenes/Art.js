@@ -30,7 +30,7 @@ class Art extends Phaser.Scene {
 
         // tile map assets
         this.load.image('grass', './assets/grassTiles.png');                   // grass tile sheet
-        this.load.tilemapTiledJSON('grassTilesMap', './assets/grassTilesMap.json');  // Tiled JSON file desu
+        this.load.tilemapTiledJSON('grassLayerMap', './assets/grassLayerMap.json');  // Tiled JSON file desu
     }
 
     create() {
@@ -72,14 +72,14 @@ class Art extends Phaser.Scene {
         // const tileset = groundMap.addTilesetImage('akgrass', 'grass');
         // const worldLayer = groundMap.createStaticLayer('grassLayer', tileset, 0, 0);
 
-        const groundMap = this.add.tilemap('grassTilesMap');
+        const groundMap = this.add.tilemap('grassLayerMap');
         const tileset = groundMap.addTilesetImage('grassTiles', 'grass');
-        const worldLayer = groundMap.createStaticLayer('grassLayer', tileset, 0, 0);
+        const worldLayer = groundMap.createStaticLayer('theGrassyKnoll', tileset, 0, 0);
 
         console.log('groundMap ', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
 
         // set collisions
-        worldLayer.setCollisionByProperty({ collide: true });
+        worldLayer.setCollisionByProperty({ collides: true });
 
         // add player 575
         this.playerOne = new Runner(this, 704, 1500, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
@@ -98,9 +98,9 @@ class Art extends Phaser.Scene {
         // this.myKokoro.alpha = 0;
 
         // add collectableItem
-        this.collectableItem = [new Collectable(this, 192, this.top, 'staryNight', 0, 10, false).setScale(2, 2).setOrigin(0, 0),
-            new Collectable(this, 96, this.middle, 'fields', 0, 10, false).setScale(2, 2).setOrigin(0, 0),
-            new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0)];
+        this.collectableItem = [new Collectable(this, 192, this.top, 'staryNight', 0, 10, false),
+            new Collectable(this, 96, this.middle, 'fields', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false),
+            new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false)];
 
         // add display hearts - normally these are setVisibale to false
         this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(true),
@@ -120,16 +120,8 @@ class Art extends Phaser.Scene {
         // start playerOne animation
         this.playerOne.anims.play('playerAni');
 
-
-
-        const debugGraphics = this.add.graphics().setAlpha(0.75); 
-        worldLayer.renderDebug(debugGraphics, { 
-            tileColor: null,    // color of non-colliding tiles 
-            // collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),    // color of colliding tiles 
-            // faceColor: new Phaser.Display.Color(40, 39, 37, 255)                // color of colliding face edges 
-            //
-        }); 
-
+        // graphics debug code
+        // graphicsDebug();
 
 
 
@@ -313,21 +305,29 @@ class Art extends Phaser.Scene {
 
 
     // display kokoro - this should probably have been a switch statement
+    // kokoroMeter(capturedHearts) {
+    //     if (capturedHearts == 10) {
+    //         this.displayKokoro[0].setVisible(true);
+    //         setScale(0.75, 0.75)
+    //         this.kokoros += 1;
+    //     } else if (capturedHearts == 20) {
+    //         this.displayKokoro[1].setVisible(true);
+    //         this.kokoros += 1;
+    //     } else if (capturedHearts == 30) {
+    //         this.displayKokoro[2].setVisible(true);
+    //         this.kokoros += 1;
+    //     } else if (capturedHearts == 40) {
+    //         this.displayKokoro[3].setVisible(true);
+    //         this.kokoros += 1;
+    //     } else if (capturedHearts == 50) {
+    //         this.displayKokoro[4].setVisible(true);
+    //         this.kokoros += 1;
+    //     }
+    // }
+
     kokoroMeter(capturedHearts) {
-        if (capturedHearts == 10) {
-            this.displayKokoro[0].setVisible(true);
-            this.kokoros += 1;
-        } else if (capturedHearts == 20) {
-            this.displayKokoro[1].setVisible(true);
-            this.kokoros += 1;
-        } else if (capturedHearts == 30) {
-            this.displayKokoro[2].setVisible(true);
-            this.kokoros += 1;
-        } else if (capturedHearts == 40) {
-            this.displayKokoro[3].setVisible(true);
-            this.kokoros += 1;
-        } else if (capturedHearts == 50) {
-            this.displayKokoro[4].setVisible(true);
+        if (capturedHearts % 10 == 0 && capturedHearts < 55) {
+            this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
             this.kokoros += 1;
         }
     }

@@ -7,6 +7,10 @@ class Collectable extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        this.body.setAllowGravity(false);
+        this.setScale(2, 2);
+        this.setOrigin(0, 0);
+
         // store point value
         this.points = pointValue;
     }
@@ -20,7 +24,10 @@ class Collectable extends Phaser.Physics.Arcade.Sprite{
     }
     reset(){
         // this.x = game.config.width;
-        this.x = this.scene.playerOne.x + 1337;
+        // this.x = this.scene.playerOne.x + 1337;
+
+        this.x = this.scene.cameras.main.scrollX + 1024;
+
         this.alpha = 1;
     }
 }

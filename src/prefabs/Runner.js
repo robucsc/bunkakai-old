@@ -7,9 +7,17 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        // store point value
-        this.points = pointValue;
-        this.myJump = false;
+        this.ACCELERATION = 500;
+        this.MAX_X_VEL = 200;   // pixels/second
+        this.MAX_Y_VEL = 2000;
+        this.DRAG = 600;
+        this.JUMP_VELOCITY = -650;
+
+        this.body.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+        this.setAccelerationX(100);
+
+        this.doubleJump = false;
+
     }
 
     update() {
@@ -19,10 +27,10 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         }
         this.moveForWard();
 
-        if (keyUP.isDown) {
-            this.myJump = true;
+        if (Phaser.Input.Keyboard.JustDown(keyUP)) {
+            this.jump();
         }
-        this.jump();
+
     }
 
     reset() {
@@ -31,30 +39,21 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
     }
 
     moveForWard() {
-        // if (Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-        // if (keyRIGHT.isDown) {
-        //     this.x += 5
-        // }
+
     }
 
     jump() {
-        // // make runner go up
-        // if (this.myJump && (this.y >= 300)) {
-        //     this.y -= 10;
-        //     if (this.y <= 300) {
-        //         this.myJump = false;
-        //         return;
-        //     }
-        // }
-        // if (!this.myJump || this.y <= 300) {
-        //     this.y += 10;
-        //     // console.log(this.y);
-        //     if (this.y >= 575) {
-        //         this.y = 575;
-        //         this.direction = true;
-        //         return;
-        //     }
-        // }
+        // make runner go up
+        if (this.body.velocity.y == 0) {
+            console.log('jump one ', this.body.velocity.y)
+            this.setVelocityY(-700);
+            this.doubleJump = true;
+
+        } else if (this.doubleJump) {
+            console.log('jump two ', this.body.velocity.y)
+            this.setVelocityY(-500);
+            this.doubleJump = false;
     }
+}
 
 }

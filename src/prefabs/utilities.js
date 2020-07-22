@@ -74,7 +74,17 @@ class utilities {
         }
     }
 
-    // mutes all audio including music and sound effects
+    graphicsDebug() {
+        const debugGraphics = this.scene.add.graphics().setAlpha(0.75);
+        this.scene.worldLayer.renderDebug(debugGraphics, {
+            tileColor: null,    // color of non-colliding tiles 
+            collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),    // color of colliding tiles 
+            faceColor: new Phaser.Display.Color(40, 39, 37, 255)                // color of colliding face edges 
+            //
+        });
+    }
+
+// mutes all audio including music and sound effects
     muteAudio() { // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
         //     if (!this.game.sound.mute) {
