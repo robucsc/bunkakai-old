@@ -353,7 +353,7 @@ class Art extends Phaser.Scene {
     }
     
     
-    /*muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
+    muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
         //     if (!this.game.sound.mute) {
         //         this.game.sound.mute = true;
@@ -361,5 +361,5 @@ class Art extends Phaser.Scene {
         //         this.game.sound = false;
         //     }
         // }
-    }*/
+    }
 }
