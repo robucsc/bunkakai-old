@@ -4,7 +4,7 @@ class Bunkakai extends Phaser.Scene{
     }
 
 
-    // Loading screen technique
+    // // Loading screen technique
     // constructor() {
     //     super({key: "menuScene",
     //         pack: {

@@ -156,6 +156,9 @@ class Fashion extends Phaser.Scene{
             this.gameOver = true;
         }, null, this);
 
+
+
+
     }
 
     update() { // ideally every frame
@@ -199,7 +202,7 @@ class Fashion extends Phaser.Scene{
         }
 
         // crossfade the sky images
-        this.changeTheSky();
+        this.utilities.changeTheSky();
 
         // Love ani movement
         // if (this.boom){ // explosion movement
