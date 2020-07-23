@@ -34,6 +34,7 @@ class Art extends Phaser.Scene {
     }
 
     create() {
+        this.song = this.sound.add('beem', {volume: 1.0});
         this.utilities = new utilities(this); // add utils example: this.utilities.crissCross();
 
         // set camera viewports
@@ -62,10 +63,10 @@ class Art extends Phaser.Scene {
         this.collectionParticles = particleManager.createEmitter();
 
         // give the emitter some properties
-        this.centerEmitter.setPosition(centerX, centerY);
-        this.centerEmitter.setSpeed(this.SPEED);
-        this.centerEmitter.setLifespan(500);
-        this.centerEmitter.frequency = -1;
+        this.collectionParticles.setPosition(centerX, centerY);
+        this.collectionParticles.setSpeed(this.SPEED);
+        this.collectionParticles.setLifespan(500);
+        this.collectionParticles.frequency = -1;
 
         // BGM config
         this.BGMconfig = {
@@ -77,6 +78,7 @@ class Art extends Phaser.Scene {
             loop: true,
             delay: 0.5 // start after half a second
         }
+
         // BGM play, this was really tricky Big thanks to Ben and Darcy!
         if (this.sound.get('artbgm') == null) { // check to see if it exists
             this.BGMmusic = this.sound.add('artbgm', this.BGMconfig); // add music
@@ -322,13 +324,14 @@ class Art extends Phaser.Scene {
         collectable.alpha = 0;
         this.p1Score += collectable.points;
         this.scoreLeft.text = this.p1Score;
-        this.centerEmitter.explode(23);
+        this.collectionParticles.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;
             this.kokoroMeter(this.capturedHearts);
         } else {
             this.capturedHearts = 0;
         }
+        
         this.sound.play('beem');
         collectable.reset(); // reset ship position
     }
