@@ -51,6 +51,28 @@ class Art extends Phaser.Scene {
         this.middle = 320;
         this.bottom = 512;
 
+        // make the sine tracker
+        this.sineCounter = this.tweens.addCounter({
+            from: 1,
+            to: this.VEL_Y,
+            duration: this.SINE_DURATION,
+            ease: 'Sine.easeInOut',
+            repeat: 10,
+            yoyo: true
+        });
+
+        //make the particle emitter
+        const particleManager = this.add.particles('circle');
+
+        // create an emitter
+        this.collectionParticles = particleManager.createEmitter();
+
+        // give the emitter some properties
+        this.centerEmitter.setPosition(centerX, centerY);
+        this.centerEmitter.setSpeed(this.SPEED);
+        this.centerEmitter.setLifespan(500);
+        this.centerEmitter.frequency = -1;
+
         // BGM config
         this.BGMconfig = {
             mute: false,
@@ -92,6 +114,9 @@ class Art extends Phaser.Scene {
         // add player to scene
         this.playerOne = new Runner(this, 704, 1024, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
 
+        //make the particle emitter follow the player
+        this.collectionParticles.startFollow(this.playerOne);
+
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
 
@@ -115,11 +140,11 @@ class Art extends Phaser.Scene {
             new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false)];
 
         // add display hearts - normally these are setVisibale to false
-        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true)];
+        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false)];
 
 
 
@@ -307,6 +332,7 @@ class Art extends Phaser.Scene {
         collectable.alpha = 0;
         this.p1Score += collectable.points;
         this.scoreLeft.text = this.p1Score;
+        this.centerEmitter.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;
             this.kokoroMeter(this.capturedHearts);
@@ -343,11 +369,12 @@ class Art extends Phaser.Scene {
         if (capturedHearts % 10 == 0 && capturedHearts < 55) {
             this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
             this.kokoros += 1;
+            this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
         }
     }
 
     kokoroDropped() {
-        console.log('the kokoro has been dropped')
+        console.log('the kokoro has been dropped');
         this.displayKokoro[this.kokoros - 1].setVisible(false);
         this.kokoros -= 1;
         this.capturedHearts -= 10;
@@ -355,8 +382,8 @@ class Art extends Phaser.Scene {
             this.capturedHearts = 0;
         }
     }
-
-
+    
+    
     muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
         //     if (!this.game.sound.mute) {
