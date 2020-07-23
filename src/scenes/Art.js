@@ -45,6 +45,16 @@ class Art extends Phaser.Scene {
         this.middle = 320;
         this.bottom = 512;
 
+        // make the sine tracker
+        this.sineCounter = this.tweens.addCounter({
+            from: 1,
+            to: this.VEL_Y,
+            duration: this.SINE_DURATION,
+            ease: 'Sine.easeInOut',
+            repeat: 10,
+            yoyo: true
+        });
+        
         // BGM config
         this.BGMconfig = {
             mute: false,
