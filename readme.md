@@ -1,21 +1,25 @@
 Bunkakai ReadMe file
 
     Lots of updates in this version
-        A lot of new artwork
-        New sounds and music
+        Physics now works
+        tiles now collide with player
+        player now moves with physics
+        Double camera implemented - still needs work
+            currently suffering background imaging issues
+        Camera zooming tests worked
+        
         Debug scene key changes
             A for Art
             F for Fashion
             M for Music
-        The character now moves
-            -> to move forward
+            
+        Character controls
             up arrow to jump
-        Character can capture paintings
-            jump to grab painting
-        Tiled foreground elements and platforms
-        
-        
-    
+            player can now jump up through platforms
+            There is a nasty fall through bug
+                this is why there is extra ground
+                in some areas!
+           
     Bunkakai is basically Japanese for 
     Culuture Club (yeah that's not lost on me either) :P
     Currently there are three sceen areas
@@ -27,14 +31,12 @@ Bunkakai ReadMe file
 Open Objectives
     
     Loading screen
-    State Machine
-    Physics
+    Camera improvements
 
 Completed
 
     in progress!
-    
-             
+  
 Wish List
     
     A new home!

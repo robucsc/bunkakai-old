@@ -3,6 +3,19 @@ class Bunkakai extends Phaser.Scene{
         super("bunkakaiScene");
     }
 
+
+    // // Loading screen technique
+    // constructor() {
+    //     super({key: "menuScene",
+    //         pack: {
+    //             files: [
+    //                 { type: 'image', key: 'loading', url: './Assets/loading_screen.png' }
+    //             ]
+    //         }});
+    // }
+    //
+    // this.add.image(0,0,"loading").setOrigin(0)
+
     preload(){
         // load splash screen
         this.load.image('splash_screen', './assets/bunkakaiText.png');
@@ -12,7 +25,7 @@ class Bunkakai extends Phaser.Scene{
         this.load.audio('sfx_explosion', './assets/sagoi.wav');
         this.load.audio('sfx_rocket', './assets/yeah.wav');
         this.load.audio('beem', './assets/yeah.wav');
-        this.load.audio('artbgm', './assets/artbgm.mp3');
+        this.load.audio('artbgm', './assets/artbgm.ogg');
         this.load.audio('fashionbgm', './assets/bunkakaiFashionGroove.mp3');
         this.load.audio('musicbgm', './assets/bunkakaiFashionGroove.mp3');
         this.load.audio('ohno', './assets/ohno.wav');

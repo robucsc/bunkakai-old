@@ -1,27 +1,40 @@
 // Runner prefab
-class Runner extends Phaser.GameObjects.Sprite {
+class Runner extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, texture, frame, pointValue, direction) {
         super(scene, x, y, texture, frame);
         this.direction = direction;
         // add object to the existing scene
         scene.add.existing(this);
+        scene.physics.add.existing(this);
 
-        // store point value
-        this.points = pointValue;
-        this.myJump = false;
+        this.ACCELERATION = 500;
+        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_Y_VEL = 1500;
+        this.DRAG = 600;
+        this.JUMP_VELOCITY = -650;
+
+        this.body.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+        this.setAccelerationX(300);
+
+        // allow player to jump through platforms
+        this.body.checkCollision.up = false;
+        this.doubleJump = false;
+
     }
 
     update() {
 
-        if (this.x >= 1912) {
-            this.reset();
+        if (this.x >= 15000) {
+            this.setAccelerationX(0);
+            this.setVelocityX(0);
         }
-        this.moveForWard();
 
-        if (keyUP.isDown) {
-            this.myJump = true;
+        this.moveForward();
+
+        if (Phaser.Input.Keyboard.JustDown(keyUP)) {
+            this.jump();
         }
-        this.jump();
+
     }
 
     reset() {
@@ -29,31 +42,30 @@ class Runner extends Phaser.GameObjects.Sprite {
         // this.x = 640;
     }
 
-    moveForWard() {
-        // if (Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-        // if (keyRIGHT.isDown) {
-            this.x += 5
-        // }
+    moveForward() {
+        if (this.body.velocity.y != 0) {
+            this.body.checkCollision.right = false;
+
+        } else {
+            this.body.checkCollision.right = true;
+        }
+
     }
 
     jump() {
+        this.body.checkCollision.right = false;
         // make runner go up
-        if (this.myJump && (this.y >= 300)) {
-            this.y -= 10;
-            if (this.y <= 300) {
-                this.myJump = false;
-                return;
-            }
+        if (this.body.velocity.y == 0) {
+            console.log('jump one ', this.body.velocity.y)
+            this.setVelocityY(-850);
+            this.doubleJump = true;
+
+        } else if (this.doubleJump) {
+            console.log('jump two ', this.body.velocity.y)
+            this.setVelocityY(-600);
+            this.doubleJump = false;
         }
-        if (!this.myJump || this.y <= 300) {
-            this.y += 10;
-            console.log(this.y);
-            if (this.y >= 575) {
-                this.y = 575;
-                this.direction = true;
-                return;
-            }
-        }
+        this.body.checkCollision.right = true;
     }
 
 }

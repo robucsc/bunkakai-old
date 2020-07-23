@@ -4,8 +4,7 @@
 let config = {
     type: Phaser.WEBGL,
     width: 1912,
-    height: 1024,
-
+    height: 2048,
 
     physics: {
         default: 'arcade',
@@ -13,7 +12,7 @@ let config = {
             debug: true,
             gravity: {
                 x: 0,
-                y: 0
+                y: 700
             }
         }
     },

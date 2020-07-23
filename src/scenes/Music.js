@@ -33,6 +33,7 @@ class Music extends Phaser.Scene {
     }
 
     create() {
+        this.utilities = new utilities(this); // add utils
 
         // collectable flight path zones
         this.top = 128;
@@ -63,9 +64,9 @@ class Music extends Phaser.Scene {
             this.BGMmusic = this.sound.add('musicbgm', this.BGMconfig);
             this.BGMmusic.play(this.BGMconfig);
         }
-        if (this.BGMmusic.mute){
-            this.BGMmusic.mute = false;
-        }
+        // if (this.BGMmusic.mute){
+        //     this.BGMmusic.mute = false;
+        // }
 
         // add ground/grass tile map
         const groundMap = this.add.tilemap('artMap');
@@ -169,7 +170,7 @@ class Music extends Phaser.Scene {
             this.scene.start("menuScene");
         }
         // debug scene change call
-        this.sceneChange();
+        this.utilities.sceneChange();
         if (this.BGMmusic.mute){
             this.BGMmusic.mute = false;
         }
@@ -190,20 +191,13 @@ class Music extends Phaser.Scene {
 
         // crissCross - evasive pattern for collectables
         if (this.clock.getElapsedSeconds() > 5) {
-            this.crissCross(this.collectableItem[0]);
-            this.crissCross(this.collectableItem[1]);
-            this.crissCross(this.collectableItem[2]);
+            this.utilities.crissCross(this.collectableItem[0]);
+            this.utilities.crissCross(this.collectableItem[1]);
+            this.utilities.crissCross(this.collectableItem[2]);
         }
 
-        // change the sky
-        // console.log(this.time.now);
-        if (this.clock.getElapsedSeconds() > 10 && this.clock.getElapsedSeconds() < 40) {
-            this.nightSky.alpha = 1;
-            this.sky.alpha -= .001;
-        } else {
-            this.sky.alpha += .001;
-            this.nightSky.alpha -= .005;
-        }
+        // crossfade the sky images
+        this.utilities.changeTheSky();
 
         // Love ani movement
         // if (this.boom){ // explosion movement
@@ -321,23 +315,6 @@ class Music extends Phaser.Scene {
         this.capturedHearts -= 10;
         if (this.capturedHearts < 0) {
             this.capturedHearts = 0;
-        }
-    }
-    // debug scene change code
-    sceneChange() {
-        if (Phaser.Input.Keyboard.JustDown(keyF)){
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("fashionScene");
-        }
-        if (Phaser.Input.Keyboard.JustDown(keyA)){
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("artScene");
         }
     }
 

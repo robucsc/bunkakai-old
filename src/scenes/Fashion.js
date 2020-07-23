@@ -33,21 +33,7 @@ class Fashion extends Phaser.Scene{
     }
 
     create() {
-
-
-
-
-        // failed attempt at making a timeline!!!
-        // this.timeline = this.tweens.createTimeline();
-        // timeline.add({
-        //     targets: circle,
-        //     x: 600,
-        //     ease: 'Power1',
-        //     duration: 3000
-        // });
-        // this.timeline.play();
-        // console.log(this.timeline);
-
+        this.utilities = new utilities(this); // add utils
 
         // collectable flight path zones
         this.top = 128;
@@ -170,6 +156,9 @@ class Fashion extends Phaser.Scene{
             this.gameOver = true;
         }, null, this);
 
+
+
+
     }
 
     update() { // ideally every frame
@@ -182,8 +171,12 @@ class Fashion extends Phaser.Scene{
             this.time.removeAllEvents();
             this.scene.start("menuScene");
         }
+
         // debug scene change call
-        this.sceneChange();
+        this.utilities.sceneChange();
+        // if (this.BGMmusic.mute){
+        //     this.BGMmusic.mute = false;
+        // }
 
         // console.log(this.moreTime);
         // console.log(this.capturedHearts, this.kokoros);
@@ -203,20 +196,13 @@ class Fashion extends Phaser.Scene{
 
         // crissCross - evasive pattern for collectables
         if (this.clock.getElapsedSeconds() > 5) {
-            this.crissCross(this.hearts[0]);
-            this.crissCross(this.hearts[1]);
-            this.crissCross(this.hearts[2]);
+            this.utilities.crissCross(this.hearts[0]);
+            this.utilities.crissCross(this.hearts[1]);
+            this.utilities.crissCross(this.hearts[2]);
         }
 
-        // change the sky
-        // console.log(this.time.now);
-        if (this.clock.getElapsedSeconds() > 10 && this.clock.getElapsedSeconds() < 40) {
-            this.nightSky.alpha = 1;
-            this.sky.alpha -= .001;
-        } else {
-            this.sky.alpha += .001;
-            this.nightSky.alpha -= .005;
-        }
+        // crossfade the sky images
+        this.utilities.changeTheSky();
 
         // Love ani movement
         // if (this.boom){ // explosion movement
@@ -285,28 +271,6 @@ class Fashion extends Phaser.Scene{
         collectable.reset(); // reset ship position
     }
 
-    crissCross(collectable) { // special thanks to Darcy for helping me with this one!!!
-        if (collectable.direction) {
-            // make collectable go up - later this could be a function
-            collectable.y -= .5;
-            // collectable.y -= Math.sin(collectable.x);
-
-            if (collectable.y <= this.top) {
-                collectable.direction = false;
-            }
-            return;
-
-        } else if (!collectable.direction) {
-            // make collectable go down - later this could be a function
-            collectable.y += .5;
-            // collectable.y += Math.sin(collectable.x);
-            if (collectable.y >= this.bottom) {
-                collectable.direction = true;
-            }
-            return;
-        }
-    }
-
     // display kokoro - this should probably have been a switch statement
     kokoroMeter(capturedHearts) {
         if (capturedHearts == 10) {
@@ -336,26 +300,5 @@ class Fashion extends Phaser.Scene{
             this.capturedHearts = 0;
         }
     }
-    // debug scene change code
-    sceneChange() {
-        if (Phaser.Input.Keyboard.JustDown(keyA)){
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("artScene");
-        }
-        if (Phaser.Input.Keyboard.JustDown(keyM)){
-            this.time.now = 0;
-            // this.sound.stopAll();
-            this.BGMmusic.mute = true;
-            this.sound.play('sfx_select');
-            this.scene.start("musicScene");
-        }
-    }
-    // timedEvent = this.time.addEvent({
-    //     delay: 2000,
-    //     callback: this.crissCross(),
-    //     callbackScope: this
-    // });
+
 }
