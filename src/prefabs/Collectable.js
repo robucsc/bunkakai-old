@@ -26,7 +26,7 @@ class Collectable extends Phaser.Physics.Arcade.Sprite{
         // this.x = game.config.width;
         // this.x = this.scene.playerOne.x + 1337;
 
-        this.x = this.scene.cameras.main.scrollX + 1024;
+        this.x = this.scene.cameras.main.scrollX + game.config.width;
 
         this.alpha = 1;
     }

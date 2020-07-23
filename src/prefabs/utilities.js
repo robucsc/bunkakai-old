@@ -5,9 +5,10 @@ class utilities {
         this.scene = scene;
     }
 
+    // How to use:
     // these are functions that are used in, and available to all scenes
     // this -> utilities
-    // this.scene -> the scene this object is part of
+    // this.scene -> the scene of which this object is part
     // this.scene.scene -> the object within the scene that has scene-related methods
     // this.scene.scene.start -> the actual method within the object that deals with scenes
     // example call:
@@ -25,7 +26,7 @@ class utilities {
         }
     }
 
-    // evasive patter for flying collectables
+    // evasive pattern for flying collectables
     crissCross(collectable) {
         if (collectable.direction) {
             // make collectable go up - later this could be a function
