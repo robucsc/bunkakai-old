@@ -56,7 +56,7 @@ class Art extends Phaser.Scene {
         });
 
         //make the particle emitter
-        const particleManager = this.add.particles('5x5');
+        const particleManager = this.add.particles('circle');
 
         // create an emitter
         this.collectionParticles = particleManager.createEmitter();
