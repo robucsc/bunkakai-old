@@ -34,16 +34,45 @@ class Art extends Phaser.Scene {
     }
 
     create() {
+        this.song = this.sound.add('beem', {volume: 1.0});
         this.utilities = new utilities(this); // add utils example: this.utilities.crissCross();
 
         // set camera viewports
         const viewportW = game.config.width;
         const viewportH = game.config.height;
 
+        // set runner values
+        this.runnerAccelerationX = 300
+        this.jumpVelocity = -850;
+        this.doublejumpVelocity = -600;
+        this.pixelLength = 15000;
+
         // collectable flight path zones
         this.top = 128;
         this.middle = 320;
         this.bottom = 512;
+
+        // make the sine tracker
+        this.sineCounter = this.tweens.addCounter({
+            from: 1,
+            to: this.VEL_Y,
+            duration: this.SINE_DURATION,
+            ease: 'Sine.easeInOut',
+            repeat: 10,
+            yoyo: true
+        });
+
+        //make the particle emitter
+        const particleManager = this.add.particles('circle');
+
+        // create an emitter
+        this.collectionParticles = particleManager.createEmitter();
+
+        // give the emitter some properties
+        this.collectionParticles.setPosition(centerX, centerY);
+        this.collectionParticles.setSpeed(this.SPEED);
+        this.collectionParticles.setLifespan(500);
+        this.collectionParticles.frequency = -1;
 
         // BGM config
         this.BGMconfig = {
@@ -55,6 +84,7 @@ class Art extends Phaser.Scene {
             loop: true,
             delay: 0.5 // start after half a second
         }
+
         // BGM play, this was really tricky Big thanks to Ben and Darcy!
         if (this.sound.get('artbgm') == null) { // check to see if it exists
             this.BGMmusic = this.sound.add('artbgm', this.BGMconfig); // add music
@@ -63,11 +93,14 @@ class Art extends Phaser.Scene {
 
         // place background images
         // this.sky = this.add.image(0, 0, "nightSky").setOrigin(0, 0);
-        this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(false);
-        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(false);
         var moon = this.add.sprite(48, 32, 'moon').setScale(1, 1).setOrigin(0, 0); // moon desu
         this.sky = this.add.tileSprite(0, 0, 934, 500, 'sky').setOrigin(0, 0).setVisible(false);
         this.hills = this.add.tileSprite(0, 0, 934, 500, 'hills').setOrigin(0, 0).setVisible(false);
+
+        this.backgoundGroup = this.add.group();
+        this.backgoundGroup.add(this.sky)
 
         this.nightSky.alpha = 0; // set sky initial alpha to not visiable
 
@@ -82,6 +115,9 @@ class Art extends Phaser.Scene {
 
         // add player to scene
         this.playerOne = new Runner(this, 704, 1024, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+
+        //make the particle emitter follow the player
+        this.collectionParticles.startFollow(this.playerOne);
 
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
@@ -106,11 +142,11 @@ class Art extends Phaser.Scene {
             new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false)];
 
         // add display hearts - normally these are setVisibale to false
-        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true),
-            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(true)];
+        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
+            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false)];
 
 
 
@@ -182,7 +218,8 @@ class Art extends Phaser.Scene {
 
         // the main camera is set as static for UI and backgrounds
         // Camera ignores - so things only show up where we want
-        this.motionCamera.ignore([this.scoreLeft, this.nightSky, this.displayKokoro]);
+        console.log(this.backgoundGroup);
+        this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
         this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,]);
 
     }
@@ -215,8 +252,8 @@ class Art extends Phaser.Scene {
 
         // this.sidewalk.tilePositionX += 4;
         this.hills.tilePositionX += 1;
-        this.sky.tilePositionX += .5;
-        this.nightSky.tilePositionX += .5;
+        this.sky.tilePositionX += 5;
+        this.nightSky.tilePositionX += 5;
 
         if (!this.gameOver) {
             // this.myKokoro.update();
@@ -297,12 +334,14 @@ class Art extends Phaser.Scene {
         collectable.alpha = 0;
         this.p1Score += collectable.points;
         this.scoreLeft.text = this.p1Score;
+        this.collectionParticles.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;
             this.kokoroMeter(this.capturedHearts);
         } else {
             this.capturedHearts = 0;
         }
+        
         this.sound.play('beem');
         collectable.reset(); // reset ship position
     }
@@ -333,11 +372,12 @@ class Art extends Phaser.Scene {
         if (capturedHearts % 10 == 0 && capturedHearts < 55) {
             this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
             this.kokoros += 1;
+            this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
         }
     }
 
     kokoroDropped() {
-        console.log('the kokoro has been dropped')
+        console.log('the kokoro has been dropped');
         this.displayKokoro[this.kokoros - 1].setVisible(false);
         this.kokoros -= 1;
         this.capturedHearts -= 10;
@@ -345,8 +385,8 @@ class Art extends Phaser.Scene {
             this.capturedHearts = 0;
         }
     }
-
-
+    
+    
     muteAudio(){ // found info for this on https://gist.github.com/zackproser/1aa1ee41f326fc00dfb4
         // if (Phaser.Input.Keyboard.JustDown(keyX)) {
         //     if (!this.game.sound.mute) {

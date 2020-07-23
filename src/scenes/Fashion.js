@@ -155,10 +155,6 @@ class Fashion extends Phaser.Scene{
             this.add.text(game.config.width / 2, game.config.height / 2 + 64, '(L)ove to Play or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
-
-
-
-
     }
 
     update() { // ideally every frame

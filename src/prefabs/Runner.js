@@ -14,20 +14,16 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         this.JUMP_VELOCITY = -650;
 
         this.body.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.setAccelerationX(300);
+        this.setAccelerationX(this.scene.runnerAccelerationX);
 
         // allow player to jump through platforms
         this.body.checkCollision.up = false;
+        // set the double jump state
         this.doubleJump = false;
 
     }
 
     update() {
-
-        if (this.x >= 15000) {
-            this.setAccelerationX(0);
-            this.setVelocityX(0);
-        }
 
         this.moveForward();
 
@@ -35,37 +31,43 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
             this.jump();
         }
 
+        this.levelFinish();
+
     }
 
     reset() {
-        // this.x = game.config.width;
-        // this.x = 640;
+
     }
 
-    moveForward() {
+    moveForward() { // this allows the runner to not run into platforms during a jump
         if (this.body.velocity.y != 0) {
             this.body.checkCollision.right = false;
-
         } else {
             this.body.checkCollision.right = true;
         }
-
     }
 
     jump() {
-        this.body.checkCollision.right = false;
         // make runner go up
-        if (this.body.velocity.y == 0) {
+        if (this.body.velocity.y == 0) { // the main jump code
             console.log('jump one ', this.body.velocity.y)
-            this.setVelocityY(-850);
+            this.setVelocityY(this.scene.jumpVelocity);
             this.doubleJump = true;
 
-        } else if (this.doubleJump) {
+        } else if (this.doubleJump) { // a second press gives a boost jump
             console.log('jump two ', this.body.velocity.y)
-            this.setVelocityY(-600);
+            this.setVelocityY(this.scene.doublejumpVelocity);
             this.doubleJump = false;
         }
-        this.body.checkCollision.right = true;
+    }
+
+    levelFinish(){
+        if (this.x >= this.scene.pixelLength) { // stop the runner at level end
+            this.setAccelerationX(0);
+            this.setVelocityX(0);
+        }
+        // victory dance
+
     }
 
 }
