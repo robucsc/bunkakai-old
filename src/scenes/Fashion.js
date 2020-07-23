@@ -34,14 +34,7 @@ class Fashion extends Phaser.Scene{
 
     create() {
         this.utilities = new utilities(this); // add utils
-        this.sineCounter = this.tweens.addCounter({
-            from: 0.5,
-            to: 1.5,
-            duration: this.SINE_DURATION,
-            ease: 'Sine.easeInOut',
-            repeat: 3,
-            yoyo: true
-        });
+
         // collectable flight path zones
         this.top = 128;
         this.middle = 320;
@@ -162,7 +155,6 @@ class Fashion extends Phaser.Scene{
             this.add.text(game.config.width / 2, game.config.height / 2 + 64, '(L)ove to Play or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
-
     }
 
     update() { // ideally every frame
@@ -277,10 +269,21 @@ class Fashion extends Phaser.Scene{
 
     // display kokoro - this should probably have been a switch statement
     kokoroMeter(capturedHearts) {
-        if (capturedHearts % 10 == 0 && capturedHearts < 55) {
-            this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
+        if (capturedHearts == 10) {
+            this.displayKokoro[0].setVisible(true);
             this.kokoros += 1;
-            this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+        } else if (capturedHearts == 20) {
+            this.displayKokoro[1].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 30) {
+            this.displayKokoro[2].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 40) {
+            this.displayKokoro[3].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 50) {
+            this.displayKokoro[4].setVisible(true);
+            this.kokoros += 1;
         }
     }
 

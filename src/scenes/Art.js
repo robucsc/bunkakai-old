@@ -41,6 +41,12 @@ class Art extends Phaser.Scene {
         const viewportW = game.config.width;
         const viewportH = game.config.height;
 
+        // set runner values
+        this.runnerAccelerationX = 300
+        this.jumpVelocity = -850;
+        this.doublejumpVelocity = -600;
+        this.pixelLength = 15000;
+
         // collectable flight path zones
         this.top = 128;
         this.middle = 320;
@@ -87,11 +93,14 @@ class Art extends Phaser.Scene {
 
         // place background images
         // this.sky = this.add.image(0, 0, "nightSky").setOrigin(0, 0);
-        this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(false);
-        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(false);
         var moon = this.add.sprite(48, 32, 'moon').setScale(1, 1).setOrigin(0, 0); // moon desu
         this.sky = this.add.tileSprite(0, 0, 934, 500, 'sky').setOrigin(0, 0).setVisible(false);
         this.hills = this.add.tileSprite(0, 0, 934, 500, 'hills').setOrigin(0, 0).setVisible(false);
+
+        this.backgoundGroup = this.add.group();
+        this.backgoundGroup.add(this.sky)
 
         this.nightSky.alpha = 0; // set sky initial alpha to not visiable
 
@@ -209,7 +218,8 @@ class Art extends Phaser.Scene {
 
         // the main camera is set as static for UI and backgrounds
         // Camera ignores - so things only show up where we want
-        this.motionCamera.ignore([this.scoreLeft, this.nightSky, this.displayKokoro]);
+        console.log(this.backgoundGroup);
+        this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
         this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,]);
 
     }
@@ -242,8 +252,8 @@ class Art extends Phaser.Scene {
 
         // this.sidewalk.tilePositionX += 4;
         this.hills.tilePositionX += 1;
-        this.sky.tilePositionX += .5;
-        this.nightSky.tilePositionX += .5;
+        this.sky.tilePositionX += 5;
+        this.nightSky.tilePositionX += 5;
 
         if (!this.gameOver) {
             // this.myKokoro.update();
