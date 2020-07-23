@@ -68,10 +68,10 @@ class Art extends Phaser.Scene {
         this.collectionParticles = particleManager.createEmitter();
 
         // give the emitter some properties
-        this.centerEmitter.setPosition(centerX, centerY);
-        this.centerEmitter.setSpeed(this.SPEED);
-        this.centerEmitter.setLifespan(500);
-        this.centerEmitter.frequency = -1;
+        // this.centerEmitter.setPosition(centerX, centerY);
+        // this.centerEmitter.setSpeed(this.SPEED);
+        // this.centerEmitter.setLifespan(500);
+        // this.centerEmitter.frequency = -1;
 
         // BGM config
         this.BGMconfig = {
@@ -91,16 +91,21 @@ class Art extends Phaser.Scene {
 
         // place background images
         // this.sky = this.add.image(0, 0, "nightSky").setOrigin(0, 0);
-        this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
-        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(false);
+        // this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
+        this.nightSky.setScrollFactor(0);
         var moon = this.add.sprite(48, 32, 'moon').setScale(1, 1).setOrigin(0, 0); // moon desu
-        this.sky = this.add.tileSprite(0, 0, 934, 500, 'sky').setOrigin(0, 0).setVisible(false);
-        this.hills = this.add.tileSprite(0, 0, 934, 500, 'hills').setOrigin(0, 0).setVisible(false);
+        moon.setScrollFactor(0);
+        // this.sky = this.add.tileSprite(0, 0, 934, 500, 'sky').setOrigin(0, 0).setVisible(false);
+        // this.hills = this.add.tileSprite(0, 0, 934, 500, 'hills').setOrigin(0, 0).setVisible(false);
 
-        this.backgoundGroup = this.add.group();
-        this.backgoundGroup.add(this.sky)
+        // this.backgoundGroup = this.add.group();
+        // this.backgoundGroup.add(this.sky)
+        // this.sky.setScrollFactor(0);
+        // this.nightSky.setScrollFactor(0);
+        // this.backgoundGroup.setScrollFactor(0);
 
-        this.nightSky.alpha = 0; // set sky initial alpha to not visiable
+        // this.nightSky.alpha = 0; // set sky initial alpha to not visiable
 
         // tile sets, maps, and collisions
         const groundMap = this.add.tilemap('grassLayerMap');
@@ -115,21 +120,21 @@ class Art extends Phaser.Scene {
         this.playerOne = new Runner(this, 704, 1024, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
 
         //make the particle emitter follow the player
-        this.collectionParticles.startFollow(this.playerOne);
+        // this.collectionParticles.startFollow(this.playerOne);
 
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
 
         // playerOne animation config
         this.anims.create({
-            key: 'playerAni',
+            key: 'playerWalkAni',
             frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 8, first: 0}),
             repeat: -1,
             frameRate: 15
         });
 
         // start playerOne animation
-        this.playerOne.anims.play('playerAni');
+        this.playerOne.anims.play('playerWalkAni');
         // add kokoro
         // this.myKokoro = new Kokoro(this, this.playerOne.x, this.playerOne.y, 'redHeart', 0).setScale(0.5, 0.5).setOrigin(0, 0);
         // this.myKokoro.alpha = 0;
@@ -207,19 +212,22 @@ class Art extends Phaser.Scene {
         // Cameras
         // add motion camera to follow the game play
         // add( [x] [, y] [, width] [, height] [, makeMain] [, name])
-        this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
-        this.motionCamera.startFollow(this.playerOne);
-        this.motionCamera.followOffset.set(-256, 64);
-        this.motionCamera.setDeadzone(0, 2048);
+        // this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
+        // this.motionCamera.startFollow(this.playerOne);
+        // this.motionCamera.followOffset.set(-256, 64);
+        // this.motionCamera.setDeadzone(0, 2048);
+        // this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
+        this.cameras.main.startFollow(this.playerOne);
+        // this.cameras.main.followOffset.set(-256, 64);
+        this.cameras.main.setDeadzone(0, 2048);
 
         console.log(this.cameras);
 
         // the main camera is set as static for UI and backgrounds
         // Camera ignores - so things only show up where we want
         console.log(this.backgoundGroup);
-        this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
-        this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,]);
-
+        // this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
+        // this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,])
     }
 
     update() { // ideally every frame
@@ -243,25 +251,25 @@ class Art extends Phaser.Scene {
         this.muteAudio();
 
         // camera zoom testing
-        this.motionCamera.zoomTo(1.5, 1000, 'Sine.easeIn', false);
-        if (this.clock.getElapsedSeconds() > 3) {
-            this.motionCamera.zoomTo(1, 3000, 'Sine.easeOut', true);
-        }
+        // this.motionCamera.zoomTo(1.5, 1000, 'Sine.easeIn', false);
+        // if (this.clock.getElapsedSeconds() > 3) {
+        //     this.motionCamera.zoomTo(1, 3000, 'Sine.easeOut', true);
+        // }
 
         // this.sidewalk.tilePositionX += 4;
-        this.hills.tilePositionX += 1;
-        this.sky.tilePositionX += 5;
+        // this.hills.tilePositionX += 1;
+        // this.sky.tilePositionX += 5;
         this.nightSky.tilePositionX += 5;
 
-        if (!this.gameOver) {
-            // this.myKokoro.update();
-            if(Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-            this.playerOne.update();        // update playerOne
-            }
-            this.collectableItem[0].update();
-            this.collectableItem[1].update();
-            this.collectableItem[2].update();
-        }
+        // if (!this.gameOver) {
+        //     // this.myKokoro.update();
+        //     if(Phaser.Input.Keyboard.JustDown(keyRIGHT)){
+        //     this.playerOne.update();        // update playerOne
+        //     }
+        //     this.collectableItem[0].update();
+        //     this.collectableItem[1].update();
+        //     this.collectableItem[2].update();
+        // }
 
         // crissCross - evasive pattern for collectables
         // if (this.clock.getElapsedSeconds() > 5) {
