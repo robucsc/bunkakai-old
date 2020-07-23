@@ -54,7 +54,19 @@ class Art extends Phaser.Scene {
             repeat: 10,
             yoyo: true
         });
-        
+
+        //make the particle emitter
+        const particleManager = this.add.particles('5x5');
+
+        // create an emitter
+        this.collectionParticles = particleManager.createEmitter();
+
+        // give the emitter some properties
+        this.centerEmitter.setPosition(centerX, centerY);
+        this.centerEmitter.setSpeed(this.SPEED);
+        this.centerEmitter.setLifespan(500);
+        this.centerEmitter.frequency = -1;
+
         // BGM config
         this.BGMconfig = {
             mute: false,
@@ -92,6 +104,9 @@ class Art extends Phaser.Scene {
 
         // add player to scene
         this.playerOne = new Runner(this, 704, 1024, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+
+        //make the particle emitter follow the player
+        this.collectionParticles.startFollow(this.playerOne);
 
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
@@ -307,6 +322,7 @@ class Art extends Phaser.Scene {
         collectable.alpha = 0;
         this.p1Score += collectable.points;
         this.scoreLeft.text = this.p1Score;
+        this.centerEmitter.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;
             this.kokoroMeter(this.capturedHearts);
