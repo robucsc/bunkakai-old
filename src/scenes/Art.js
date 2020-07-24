@@ -5,20 +5,6 @@ class Art extends Phaser.Scene {
     }
 
     preload() {
-        // background images
-        this.load.image('redHeart', './assets/redHeart.png');
-        this.load.image('hills', './assets/hills.png');
-        this.load.image('sky', './assets/sky.png');
-        this.load.image('nightSky', './assets/starryBackground.jpg');
-        this.load.image('moon', './assets/moon.png');
-
-        // particle images
-        this.load.image('circle', './assets/circle-8x8.png');
-
-        // art images
-        this.load.image('starryNight', './assets/starryNight.png');
-        this.load.image('fields', './assets/fields.png');
-        this.load.image('bridge', './assets/bridge.png');
 
         // tile map assets
         this.load.image('grass', './assets/grassTiles192x192.png');                   // grass tile sheet
