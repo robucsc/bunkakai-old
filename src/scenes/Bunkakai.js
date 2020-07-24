@@ -40,6 +40,45 @@ class Bunkakai extends Phaser.Scene{
         this.load.audio('fashionbgm', './assets/bunkakaiFashionGroove.mp3');
         this.load.audio('musicbgm', './assets/bunkakaiFashionGroove.mp3');
         this.load.audio('ohno', './assets/ohno.wav');
+
+
+        // player spritesheets
+        this.load.spritesheet('playerRun', './assets/miaSprite.png', {
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 7
+        });
+
+        this.load.spritesheet('playerIdle', './assets/miaIdleForward.png', {
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 3
+        });
+
+        this.load.spritesheet('playerVictory', './assets/miaVictoryPose.png', {
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 4
+        });
+
+        this.load.spritesheet('playerjump', './assets/miaInAir.png', {
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 3
+        });
+
+        // thief walk
+        this.load.spritesheet('enemyOneWalk', './assets/thiefWalk.png', {
+            frameWidth: 128,
+            frameHeight: 176,
+            startFrame: 0,
+            endFrame: 3
+        });
+
     }
 
 

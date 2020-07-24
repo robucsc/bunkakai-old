@@ -73,6 +73,12 @@ class utilities {
             this.scene.sound.play('sfx_select');
             this.scene.scene.start("musicScene");
         }
+        if (Phaser.Input.Keyboard.JustDown(keyT)) {
+            this.scene.time.now = 0;
+            this.scene.BGMmusic.mute = true;
+            this.scene.sound.play('sfx_select');
+            this.scene.scene.start("tutorialScene");
+        }
     }
 
     graphicsDebug() {

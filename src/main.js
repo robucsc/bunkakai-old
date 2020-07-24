@@ -4,7 +4,7 @@
 let config = {
     type: Phaser.WEBGL,
     width: 1912,
-    height: 2048,
+    height: 1024,
 
     physics: {
         default: 'arcade',
@@ -12,7 +12,7 @@ let config = {
             debug: true,
             gravity: {
                 x: 0,
-                y: 700
+                y: 900
             }
         }
     },
@@ -38,4 +38,4 @@ let cursors = null;
 
 
 // reserve some keyboard bindings
-let keyL, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyA, keyF, keyM, keyX;
+let keyL, keyLEFT, keyRIGHT, keyUP, keyDOWN, keyA, keyT, keyF, keyM, keyX;

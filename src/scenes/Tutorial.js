@@ -5,8 +5,15 @@ class Tutorial extends Phaser.Scene{
 
     preload(){
         // load splash screen
-        this.load.image('splash_screen', './assets/bunkakaiText.png');
-        this.load.image('background', './assets/day.jpg')
+        // this.load.image('splash_screen', './assets/bunkakaiText.png');
+        // this.load.image('background', './assets/day.jpg')
+
+        this.load.spritesheet('playerIdle', './assets/miaIdleForward.png', {
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 3
+        });
     }
 
 
@@ -17,10 +24,27 @@ class Tutorial extends Phaser.Scene{
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
 
-        // display splash screen
-        this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'background').setOrigin(0, 0);
-        this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'splash_screen').setOrigin(0, 0);
+        // debug scene change keys
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A); // art
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F); // fashion
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M); // music
+        keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T); // tutorial
 
+        // display splash screen
+        // this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'background').setOrigin(0, 0);
+        // this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'splash_screen').setOrigin(0, 0);
+
+        this.anims.create({
+            key: 'playerIdleAni',
+            frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 3, first: 0}),
+            repeat: -1,
+            frameRate: 15
+        });
+
+        // add player to scene
+        this.playerOne = new Runner(this, 512, 512, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+        this.playerOne.body.setAllowGravity(false)
+        this.playerOne.anims.play('playerIdle');
 
         // menu dispay
         let menuConfig = {
@@ -58,9 +82,11 @@ class Tutorial extends Phaser.Scene{
         //         gameTimer: 600000
         //     }
             // this.sound.play('sfx_select');
-            this.scene.start("artScene");
+            // this.scene.start("artScene");
         // }
 
+        // debug scene change call
+        this.utilities.sceneChange();
     }
 }
 

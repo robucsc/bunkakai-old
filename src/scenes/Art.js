@@ -20,17 +20,9 @@ class Art extends Phaser.Scene {
         this.load.image('fields', './assets/fields.png');
         this.load.image('bridge', './assets/bridge.png');
 
-        // player spritesheets
-        this.load.spritesheet('playerRun', './assets/miaSprite.png', {
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 7
-        });
-
         // tile map assets
-        this.load.image('grass', './assets/grassTiles.png');                   // grass tile sheet
-        this.load.tilemapTiledJSON('grassLayerMap', './assets/grassLayerMap.json');  // Tiled JSON file desu
+        this.load.image('grass', './assets/grassTiles192x192.png');                   // grass tile sheet
+        this.load.tilemapTiledJSON('grassLayerMap', './assets/artSceneMap.json');  // Tiled JSON file desu
     }
 
     create() {
@@ -41,10 +33,10 @@ class Art extends Phaser.Scene {
         const viewportH = game.config.height;
 
         // set runner values
-        this.runnerAccelerationX = 300
-        this.jumpVelocity = -850;
-        this.doublejumpVelocity = -600;
-        this.pixelLength = 15000;
+        this.runnerAccelerationX = 150
+        this.jumpVelocity = -675;
+        this.doublejumpVelocity = -350;
+        this.pixelLength = 15296;
 
         // collectable flight path zones
         this.top = 128;
@@ -90,34 +82,22 @@ class Art extends Phaser.Scene {
         }
 
         // place background images
-        // this.sky = this.add.image(0, 0, "nightSky").setOrigin(0, 0);
-        // this.sky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
         this.nightSky = this.add.tileSprite(0, 0, 1912, 1024, 'nightSky').setOrigin(0, 0).setVisible(true);
         this.nightSky.setScrollFactor(0);
         var moon = this.add.sprite(48, 32, 'moon').setScale(1, 1).setOrigin(0, 0); // moon desu
         moon.setScrollFactor(0);
-        // this.sky = this.add.tileSprite(0, 0, 934, 500, 'sky').setOrigin(0, 0).setVisible(false);
-        // this.hills = this.add.tileSprite(0, 0, 934, 500, 'hills').setOrigin(0, 0).setVisible(false);
-
-        // this.backgoundGroup = this.add.group();
-        // this.backgoundGroup.add(this.sky)
-        // this.sky.setScrollFactor(0);
-        // this.nightSky.setScrollFactor(0);
-        // this.backgoundGroup.setScrollFactor(0);
-
-        // this.nightSky.alpha = 0; // set sky initial alpha to not visiable
 
         // tile sets, maps, and collisions
         const groundMap = this.add.tilemap('grassLayerMap');
-        const tileset = groundMap.addTilesetImage('grassTiles', 'grass');
+        const tileset = groundMap.addTilesetImage('vgGrass64x64', 'grass');
         const worldLayer = groundMap.createStaticLayer('theGrassyKnoll', tileset, 0, 0);
-        console.log('groundMap ', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
+        console.log('groundMap', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
 
         // set collisions
         worldLayer.setCollisionByProperty({ collides: true });
 
         // add player to scene
-        this.playerOne = new Runner(this, 704, 1024, 'playerRun', 0, 30, false).setScale(1, 1).setOrigin(0, 0);
+        this.playerOne = new Runner(this, 256, 512, 'playerRun', 0, 30, false).setScale(.75, .75).setOrigin(0, 0);
 
         //make the particle emitter follow the player
         // this.collectionParticles.startFollow(this.playerOne);
@@ -125,24 +105,28 @@ class Art extends Phaser.Scene {
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
 
-        // playerOne animation config
-        this.anims.create({
-            key: 'playerWalkAni',
-            frames: this.anims.generateFrameNumbers('playerRun', {start: 0, end: 8, first: 0}),
-            repeat: -1,
-            frameRate: 15
-        });
-
         // start playerOne animation
         this.playerOne.anims.play('playerWalkAni');
+
         // add kokoro
         // this.myKokoro = new Kokoro(this, this.playerOne.x, this.playerOne.y, 'redHeart', 0).setScale(0.5, 0.5).setOrigin(0, 0);
         // this.myKokoro.alpha = 0;
 
-        // add collectableItem
+        // add collectable Items
         this.collectableItem = [new Collectable(this, 192, this.top, 'starryNight', 0, 10, false),
             new Collectable(this, 96, this.middle, 'fields', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false),
             new Collectable(this, 0, this.bottom, 'bridge', 0, 10, false).setScale(2, 2).setOrigin(0, 0).body.setAllowGravity(false)];
+
+        for (let step = 0; step < this.collectableItem.length; step++){
+            // this.collectableItem[step].setScrollFactor(0);
+            console.log(this.collectableItem[step])
+        }
+        // this.collectableItem[0].setScrollFactor(0);
+        // this.collectableItem[1].setScrollFactor(0);
+        // this.collectableItem[2].setScrollFactor(0);
+
+
+        // this.collectableItem.setScrollFactor(0);
 
         // add display hearts - normally these are setVisibale to false
         this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(false),
@@ -151,19 +135,19 @@ class Art extends Phaser.Scene {
             this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
             this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false)];
 
-
+        // this.displayKokoro.setScrollFactor(0);
 
         // graphics debug code
         // this.utilities.graphicsDebug();
 
         // Particle System
-        // this.particles = this.add.particles('circle');
-        // this.particles.createEmitter({
-        //     speed: 100,
-        //     gravity: { x: 0, y: 200 },
-        //     scale: { start: 0.1, end: 1 },
-        //     tint: [0x008080, 0x008B8B, 0x00FFFF, 0xff0000],
-        // }).startFollow(this.miku, 32, 32); // particle offset from followee
+        this.particles = this.add.particles('circle');
+        this.particles.createEmitter({
+            speed: 100,
+            gravity: { x: 0, y: 200 },
+            scale: { start: 0.1, end: 1 },
+            tint: [0x008080, 0x008B8B, 0x00FFFF, 0xff0000],
+        }).startFollow(this.miku, 32, 32); // particle offset from followee
 
         // define control keys
         keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
@@ -176,6 +160,7 @@ class Art extends Phaser.Scene {
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A); // art
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F); // fashion
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M); // music
+        keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T); // tutorial
 
         // score
         this.p1Score = 0;
@@ -218,14 +203,14 @@ class Art extends Phaser.Scene {
         // this.motionCamera.setDeadzone(0, 2048);
         // this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
         this.cameras.main.startFollow(this.playerOne);
-        // this.cameras.main.followOffset.set(-256, 64);
-        this.cameras.main.setDeadzone(0, 2048);
+        this.cameras.main.followOffset.set(-756, 64);
+        this.cameras.main.setDeadzone(1280, 1536);
 
         console.log(this.cameras);
 
         // the main camera is set as static for UI and backgrounds
         // Camera ignores - so things only show up where we want
-        console.log(this.backgoundGroup);
+        // console.log(this.backgoundGroup);
         // this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
         // this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,])
     }
@@ -250,6 +235,16 @@ class Art extends Phaser.Scene {
         // global audio mute
         this.muteAudio();
 
+        if (this.playerOne.body.velocity.y != 0){
+            this.playerOne.anims.play('playerJumpAni', true);
+        } else {
+            this.playerOne.anims.play('playerWalkAni', true);
+        }
+
+        if (this.playerOne.x == this.pixelLength || this.playerOne.body.velocity.x == 0){
+            this.playerOne.anims.play('playerIdleAni', true);
+        }
+
         // camera zoom testing
         // this.motionCamera.zoomTo(1.5, 1000, 'Sine.easeIn', false);
         // if (this.clock.getElapsedSeconds() > 3) {
@@ -259,7 +254,7 @@ class Art extends Phaser.Scene {
         // this.sidewalk.tilePositionX += 4;
         // this.hills.tilePositionX += 1;
         // this.sky.tilePositionX += 5;
-        this.nightSky.tilePositionX += 5;
+        this.nightSky.tilePositionX += .5;
 
         // if (!this.gameOver) {
         //     // this.myKokoro.update();
@@ -353,33 +348,33 @@ class Art extends Phaser.Scene {
 
 
     // display kokoro - this should probably have been a switch statement
-    // kokoroMeter(capturedHearts) {
-    //     if (capturedHearts == 10) {
-    //         this.displayKokoro[0].setVisible(true);
-    //         setScale(0.75, 0.75)
-    //         this.kokoros += 1;
-    //     } else if (capturedHearts == 20) {
-    //         this.displayKokoro[1].setVisible(true);
-    //         this.kokoros += 1;
-    //     } else if (capturedHearts == 30) {
-    //         this.displayKokoro[2].setVisible(true);
-    //         this.kokoros += 1;
-    //     } else if (capturedHearts == 40) {
-    //         this.displayKokoro[3].setVisible(true);
-    //         this.kokoros += 1;
-    //     } else if (capturedHearts == 50) {
-    //         this.displayKokoro[4].setVisible(true);
-    //         this.kokoros += 1;
-    //     }
-    // }
-
     kokoroMeter(capturedHearts) {
-        if (capturedHearts % 10 == 0 && capturedHearts < 55) {
-            this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
+        if (capturedHearts == 10) {
+            this.displayKokoro[0].setVisible(true);
+            setScale(0.75, 0.75)
             this.kokoros += 1;
-            this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+        } else if (capturedHearts == 20) {
+            this.displayKokoro[1].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 30) {
+            this.displayKokoro[2].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 40) {
+            this.displayKokoro[3].setVisible(true);
+            this.kokoros += 1;
+        } else if (capturedHearts == 50) {
+            this.displayKokoro[4].setVisible(true);
+            this.kokoros += 1;
         }
     }
+
+    // kokoroMeter(capturedHearts) {
+    //     if (capturedHearts % 10 == 0 && capturedHearts < 55) {
+    //         this.displayKokoro[capturedHearts/10 - 1].setVisible(true);
+    //         this.kokoros += 1;
+    //         this.displayKokoro[capturedHearts/10 - 1].setScale(this.sineCounter.getValue(), this.sineCounter.getValue());
+    //     }
+    // }
 
     kokoroDropped() {
         console.log('the kokoro has been dropped');

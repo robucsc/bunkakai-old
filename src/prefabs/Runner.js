@@ -8,7 +8,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         scene.physics.add.existing(this);
 
         this.ACCELERATION = 500;
-        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_X_VEL = 300;   // pixels/second
         this.MAX_Y_VEL = 1500;
         this.DRAG = 600;
         this.JUMP_VELOCITY = -650;
@@ -20,6 +20,35 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         this.body.checkCollision.up = false;
         // set the double jump state
         this.doubleJump = false;
+
+        // playerOne animation config
+        this.scene.anims.create({
+            key: 'playerWalkAni',
+            frames: this.scene.anims.generateFrameNumbers('playerRun', {start: 0, end: 8, first: 0}),
+            repeat: -1,
+            frameRate: 15
+        });
+
+        this.scene.anims.create({
+            key: 'playerIdleAni',
+            frames: this.scene.anims.generateFrameNumbers('playerIdle', {start: 0, end: 3, first: 0}),
+            repeat: -1,
+            frameRate: 15
+        });
+
+        this.scene.anims.create({
+            key: 'playerVictoryAni',
+            frames: this.scene.anims.generateFrameNumbers('playerVictory', {start: 0, end: 4, first: 0}),
+            repeat: 0,
+            frameRate: 15
+        });
+
+        this.scene.anims.create({
+            key: 'playerJumpAni',
+            frames: this.scene.anims.generateFrameNumbers('playerjump', {start: 0, end: 3, first: 0}),
+            repeat: 0,
+            frameRate: 15
+        });
 
     }
 
