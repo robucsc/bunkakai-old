@@ -14,7 +14,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         this.JUMP_VELOCITY = -650;
 
         this.body.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.setAccelerationX(this.scene.runnerAccelerationX);
+        // this.setAccelerationX(this.scene.runnerAccelerationX);
 
         // allow player to jump through platforms
         this.body.checkCollision.up = false;
@@ -54,6 +54,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
 
     update() {
 
+        this.running();
         this.moveForward();
 
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
@@ -74,7 +75,26 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         } else {
             this.body.checkCollision.right = true;
         }
+
     }
+
+    running(){
+        let keyDown = Phaser.Input.Keyboard.JustDown(keyRIGHT); // because justDown can only be called once per loop
+
+        if (keyDown && this.body.onWall()) {
+            console.log('miniJump ', this.body.velocity.y);
+            this.setVelocityY(this.scene.miniJumpVelocity);
+        } else if (keyDown){
+            this.setVelocityX(this.scene.runnerVelocityX);
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.setVelocityX(-this.scene.runnerVelocityX);
+        }
+
+    }
+
+    // this.body.blocked().right
 
     jump() {
         // make runner go up

@@ -33,9 +33,11 @@ class Art extends Phaser.Scene {
         const viewportH = game.config.height;
 
         // set runner values
-        this.runnerAccelerationX = 150
+        this.runnerAccelerationX = 150;
+        this.runnerVelocityX = 200;
         this.jumpVelocity = -675;
         this.doublejumpVelocity = -350;
+        this.miniJumpVelocity = -350;
         this.pixelLength = 15296;
 
         // collectable flight path zones
@@ -95,6 +97,7 @@ class Art extends Phaser.Scene {
 
         // set collisions
         worldLayer.setCollisionByProperty({ collides: true });
+        this.physics.world.TILE_BIAS = 24;  // increase to prevent sprite tunneling through tiles
 
         // add player to scene
         this.playerOne = new Runner(this, 256, 512, 'playerRun', 0, 30, false).setScale(.75, .75).setOrigin(0, 0);
@@ -246,9 +249,9 @@ class Art extends Phaser.Scene {
         }
 
         // camera zoom testing
-        // this.motionCamera.zoomTo(1.5, 1000, 'Sine.easeIn', false);
+        // this.cameras.main.zoomTo(1.5, 1000, 'Sine.easeIn', false);
         // if (this.clock.getElapsedSeconds() > 3) {
-        //     this.motionCamera.zoomTo(1, 3000, 'Sine.easeOut', true);
+        //     this.cameras.main.zoomTo(1, 3000, 'Sine.easeOut', true);
         // }
 
         // this.sidewalk.tilePositionX += 4;
