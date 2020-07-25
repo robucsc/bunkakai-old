@@ -35,7 +35,7 @@ class Art extends Phaser.Scene {
         // set runner values
         this.runnerAccelerationX = 150;
         this.runnerVelocityX = 200;
-        this.jumpVelocity = -675;
+        this.jumpVelocity = -680;
         this.doublejumpVelocity = -350;
         this.miniJumpVelocity = -350;
         this.pixelLength = 15296;
