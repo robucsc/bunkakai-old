@@ -5,12 +5,7 @@ class Art extends Phaser.Scene {
     }
 
     preload() {
-
-
-
-        // tile map assets
-        this.load.image('grass', './assets/grassTiles192x192.png');                   // grass tile sheet
-        this.load.tilemapTiledJSON('grassLayerMap', './assets/artSceneMap.json');  // Tiled JSON file desu
+        
     }
 
     create() {
