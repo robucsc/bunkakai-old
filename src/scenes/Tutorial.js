@@ -10,13 +10,13 @@ class Tutorial extends Phaser.Scene{
          */
         var progressBar = this.add.graphics();//creates progressBar
         var progressBox = this.add.graphics();//boarder around progressBar
-        progressBox.fillStyle(0xfacade, 0.8);
+        progressBox.fillStyle(0x222222, 0.8);
         progressBox.fillRect(centerX - 250, centerY + 400, 500, 100);
 
         this.load.on('progress', function (value) {//uses the built in progress event from Phaser
             console.log(value);
             progressBar.clear();
-            progressBar.fillStyle(0x222222, 1);
+            progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(centerX - 260, centerY + 410, 300 * value, 100);
         });
                     
@@ -43,19 +43,17 @@ class Tutorial extends Phaser.Scene{
 
         //////////
 
-        // load spritesheets
-        this.load.spritesheet('kittyRun', './assets/miaSprite.png', {
-            // frameWidth: 115,
-            // frameHeight: 64,
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 7
-        });
+        // // load spritesheets
+        // this.load.spritesheet('kittyRun', './assets/miaSprite.png', {
+        //     // frameWidth: 115,
+        //     // frameHeight: 64,
+        //     frameWidth: 128,
+        //     frameHeight: 202,
+        //     startFrame: 0,
+        //     endFrame: 7
+        // });
 
         // tile map assets
-        this.load.image('grass', './assets/grasstp.png');                   // grass tile sheet
-        this.load.tilemapTiledJSON('artMap', './assets/artMap.json');  // Tiled JSON file desu
 
         //////////
 
@@ -69,7 +67,7 @@ class Tutorial extends Phaser.Scene{
         //////////
 
         // load audio files
-        this.load.audio('sfx_select', './assets/iPhoneCameraSound.mp3');
+        this.load.audio('sfx_select', './assets/iPhoneCameraSound.mp3')
         this.load.audio('sfx_explosion', './assets/sagoi.wav');
         this.load.audio('sfx_rocket', './assets/yeah.wav');
         this.load.audio('beem', './assets/yeah.wav');
@@ -80,42 +78,7 @@ class Tutorial extends Phaser.Scene{
 
         //////////
 
-        // player spritesheets
-        this.load.spritesheet('playerRun', './assets/miaSprite.png', {
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 7
-        });
 
-        this.load.spritesheet('playerIdle', './assets/miaIdleForward.png', {
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 3
-        });
-
-        this.load.spritesheet('playerVictory', './assets/miaVictoryPose.png', {
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 4
-        });
-
-        this.load.spritesheet('playerjump', './assets/miaInAir.png', {
-            frameWidth: 128,
-            frameHeight: 202,
-            startFrame: 0,
-            endFrame: 3
-        });
-
-        // thief walk
-        this.load.spritesheet('enemyOneWalk', './assets/thiefWalk.png', {
-            frameWidth: 128,
-            frameHeight: 176,
-            startFrame: 0,
-            endFrame: 3
-        });
 
         //////////
 
@@ -183,7 +146,24 @@ class Tutorial extends Phaser.Scene{
         menuConfig.color = '#000';
         this.add.text(centerX, centerY + 0, 'Press the → arrow to Play', menuConfig).setOrigin(0.5);
 
-        // this.utilities = new utilities(this); tried to make work
+        this.utilities = new utilities(this); // add utils example: this.utilities.crissCross();
+
+        // BGM config
+        this.BGMconfig = {
+            mute: false,
+            volume: 1,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: true,
+            delay: 0.5 // start after half a second
+        }
+        // BGM play, this was really tricky Big thanks to Ben and Darcy!
+        if (this.sound.get('artbgm') == null) { // check to see if it exists
+            this.BGMmusic = this.sound.add('artbgm', this.BGMconfig); // add music
+            this.BGMmusic.play(this.BGMconfig); // play music
+        }
+
     }
 
     update(){ // ideally every frame
@@ -199,11 +179,14 @@ class Tutorial extends Phaser.Scene{
 
         // debug scene change call
 
-        if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
+        // if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
 
-            this.scene.start("artScene");
+        //     this.scene.start("artScene");
 
-        }
+        // }
+
+         // debug scene change call
+        this.utilities.sceneChange();
 
         
 
