@@ -81,6 +81,7 @@ class Art extends Phaser.Scene {
         // tile sets, maps, and collisions
         const groundMap = this.add.tilemap('grassLayerMap');
         const tileset = groundMap.addTilesetImage('vgGrass64x64', 'grass');
+
         const worldLayer = groundMap.createStaticLayer('theGrassyKnoll', tileset, 0, 0);
         console.log('groundMap', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
 
