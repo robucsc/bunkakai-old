@@ -6,6 +6,8 @@ class Art extends Phaser.Scene {
 
     preload() {
 
+
+
         // tile map assets
         this.load.image('grass', './assets/grassTiles192x192.png');                   // grass tile sheet
         this.load.tilemapTiledJSON('grassLayerMap', './assets/artSceneMap.json');  // Tiled JSON file desu
@@ -27,7 +29,7 @@ class Art extends Phaser.Scene {
         this.pixelLength = 15296;
 
         // set antagonist values
-        this.antagonistAccelerationX = -255
+        this.antagonistVelocityX = -255
 
         // collectable flight path zones
         this.top = 128;
@@ -85,7 +87,25 @@ class Art extends Phaser.Scene {
         const worldLayer = groundMap.createStaticLayer('theGrassyKnoll', tileset, 0, 0);
         console.log('groundMap', groundMap, 'tileset ', tileset, 'worldLayer', worldLayer)
 
-        // set collisions
+        // add collectableItems
+        // generate coin objects from object data
+        // .createFromObjects(name, id, spriteConfig [, scene])
+        this.pallets = groundMap.createFromObjects("collectableItems", "pallet", {
+            key: "cItems",
+            frame: 0
+        }, this);
+        // createFromObjects can't add Physics Sprites, so we add physics manually
+        // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#enable__anchor
+        // second parameter is 0: DYNAMIC_BODY or 1: STATIC_BODY
+        this.physics.world.enable(this.pallets, Phaser.Physics.Arcade.STATIC_BODY);
+        // now use JS .map method to set a more accurate circle body on each sprite
+        this.pallets.map((pallet) => {
+            pallet.body.setCircle(32).setOffset(2, -1);
+        });
+        // then add the items to a group
+        this.palletsGroup = this.add.group(this.pallets);
+
+        // set collisions of world and player
         worldLayer.setCollisionByProperty({ collides: true });
         this.physics.world.TILE_BIAS = 39;  // increase to prevent sprite tunneling through tiles
 
@@ -94,6 +114,14 @@ class Art extends Phaser.Scene {
 
         // add antagonist to the scene
         this.thief = new Antagonist(this, 1024, 512, 'antagonistRun', 0, 10, true).setScale(1, 1).setOrigin(0,0);
+
+        // create collider for playerOne and collectableItems
+        this.physics.add.overlap(this.playerOne, this.palletsGroup, (obj1, obj2) => {
+            obj2.destroy(); // remove item on overlap
+            // sound
+            // other events
+        });
+
 
         //make the particle emitter follow the player
         // this.collectionParticles.startFollow(this.playerOne);
@@ -116,7 +144,7 @@ class Art extends Phaser.Scene {
 
         for (let step = 0; step < this.collectableItem.length; step++){
             // this.collectableItem[step].setScrollFactor(0);
-            console.log(this.collectableItem[step])
+            // console.log(this.collectableItem[step])
         }
         // this.collectableItem[0].setScrollFactor(0);
         // this.collectableItem[1].setScrollFactor(0);
@@ -126,13 +154,11 @@ class Art extends Phaser.Scene {
         // this.collectableItem.setScrollFactor(0);
 
         // add display hearts - normally these are setVisibale to false
-        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(false),
-            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
-            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
-            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false),
-            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false)];
-
-        // this.displayKokoro.setScrollFactor(0);
+        this.displayKokoro = [this.add.sprite(1528, 48, 'bridge').setScale(1, 1).setOrigin(0, 0).setVisible(true).setScrollFactor(0),
+            this.add.sprite(1568, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false).setScrollFactor(0),
+            this.add.sprite(1608, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false).setScrollFactor(0),
+            this.add.sprite(1648, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false).setScrollFactor(0),
+            this.add.sprite(1688, 48, 'redHeart').setScale(0.75, 0.75).setOrigin(0, 0).setVisible(false).setScrollFactor(0)];
 
         // graphics debug code
         // this.utilities.graphicsDebug();
@@ -160,7 +186,7 @@ class Art extends Phaser.Scene {
         keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T); // tutorial
 
         // score
-        this.p1Score = 0;
+        this.playerOneScore = 0;
 
         // score display
         let scoreConfig = {
@@ -175,7 +201,7 @@ class Art extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(96, 48, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(96, 48, this.playerOneScore, scoreConfig).setScrollFactor(0);
         this.capturedHearts = 0;
         this.kokoros = 0;
 
@@ -195,6 +221,7 @@ class Art extends Phaser.Scene {
         this.cameras.main.startFollow(this.playerOne);
         this.cameras.main.followOffset.set(-756, 64);
         this.cameras.main.setDeadzone(1280, 1536);
+        this.cameras.main.fadeIn(1500, 0, 0, 0)
         // console.log(this.cameras);
     }
 
@@ -202,7 +229,7 @@ class Art extends Phaser.Scene {
         // check key input for restart, keyUP for one handed play
         if (this.gameOver && (Phaser.Input.Keyboard.JustDown(keyL))) {
             this.time.removeAllEvents();
-            this.scene.restart(this.p1Score);
+            this.scene.restart(this.playerOneScore);
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.time.removeAllEvents();
@@ -222,6 +249,7 @@ class Art extends Phaser.Scene {
             this.playerOne.anims.play('playerJumpAni', true);
         } else  if (this.playerOne.x >= this.pixelLength){
             this.playerOne.anims.play('playerVictoryAni', true);
+            // this.sound.play('sagoi');
         } else if (this.playerOne.body.velocity.x == 0){
             this.playerOne.anims.play('playerIdleAni', true);
         } else {
@@ -229,14 +257,18 @@ class Art extends Phaser.Scene {
         }
 
 
-
-
-
         // camera zoom testing
-        // this.cameras.main.zoomTo(1.5, 1000, 'Sine.easeIn', false);
-        // if (this.clock.getElapsedSeconds() > 3) {
-        //     this.cameras.main.zoomTo(1, 3000, 'Sine.easeOut', true);
+        // this.cameras.main.zoomTo(1.5, 0, 'Sine.easeIn', false).centerOn(this.playerOne.x + 512, this.playerOne.y);
+        // if (this.clock.getElapsedSeconds() > 1) {
+        //     this.cameras.main.zoomTo(1, 2000, 'Sine.easeOut', true);
+        //     this.cameras.main.followOffset.set(-756, 64);
+        //     this.cameras.main.setDeadzone(1024, 1912);
         // }
+        // this.cameras.main.centerToBounds();
+
+
+
+
 
         // background animation
         this.nightSky.tilePositionX += .5;
@@ -303,15 +335,15 @@ class Art extends Phaser.Scene {
             // collectable.alpha = 1;                         // make ship visible again
             this.boom.destroy();                    // remove explosion sprite
         });
-        this.p1Score += collectable.points;
-        this.scoreLeft.text = this.p1Score;
+        this.playerOneScore += collectable.points;
+        this.scoreLeft.text = this.playerOneScore;
         this.sound.play('sfx_explosion');
     }
 
     collected(collectable) {
         collectable.alpha = 0;
-        this.p1Score += collectable.points;
-        this.scoreLeft.text = this.p1Score;
+        this.playerOneScore += collectable.points;
+        this.scoreLeft.text = this.playerOneScore;
         // this.centerEmitter.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;

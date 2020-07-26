@@ -27,6 +27,7 @@ class Bunkakai extends Phaser.Scene{
 
 
 
+
         this.load.tilemapTiledJSON('artMap', './assets/artMap.json');  // Tiled JSON file desu
 
         //////////
@@ -41,6 +42,7 @@ class Bunkakai extends Phaser.Scene{
         //////////
 
 
+
     }
 
 
@@ -51,13 +53,15 @@ class Bunkakai extends Phaser.Scene{
         this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'background').setOrigin(0, 0);
         this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'splash_screen').setOrigin(0, 0);
 
-
-
+        // Camera fade in
+        this.cameras.main.fadeIn(1500, 0, 0, 0)
     }
 
     update(){ // ideally every frame
+
         
         this.scene.launch("preloadScene");
+
 
     }
 }

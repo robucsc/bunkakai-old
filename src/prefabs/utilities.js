@@ -31,8 +31,6 @@ class utilities {
         if (collectable.direction) {
             // make collectable go up - later this could be a function
             collectable.y -= .5;
-            // collectable.y -= Math.sin(collectable.x);
-            // this.y = Math.sin(this.x) * n + this.initialY
             if (collectable.y <= this.top) {
                 collectable.direction = false;
             }
@@ -41,7 +39,6 @@ class utilities {
         } else if (!collectable.direction) {
             // make collectable go down - later this could be a function
             collectable.y += .5;
-            // collectable.y += Math.sin(collectable.x);
             if (collectable.y >= this.bottom) {
                 collectable.direction = true;
             }
