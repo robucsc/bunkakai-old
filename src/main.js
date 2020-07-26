@@ -16,7 +16,7 @@ let config = {
             }
         }
     },
-    scene: [Bunkakai, Art, Fashion, Music, ],
+    scene: [Bunkakai, Preload, Tutorial, Art, Fashion, Music, ],
 };
 
 // create main game object
