@@ -68,11 +68,6 @@ class Preload extends Phaser.Scene{
 
     create(){
         
-
-
-
-
-
     }
 
     update(){ // ideally every frame

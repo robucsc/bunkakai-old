@@ -20,23 +20,6 @@ class Tutorial extends Phaser.Scene{
         progressBar.fillRect(centerX - 110, centerY + 400, 300 * .75, 30);
 
 
-        // this.load.on('progress', function (value) {//uses the built in progress event from Phaser
-        //     console.log(value);
-        //     progressBar.clear();
-        //     progressBar.fillStyle(0xffffff, 1);
-        //     progressBar.fillRect(250, 280, 300 * value, 30);
-        // });
-                    
-        // this.load.on('fileprogress', function (file) {//can be used to display info of each loading file
-        //     console.log(file.src);
-        // });
-         
-        // this.load.on('complete', function () {//phaser event for end of loading to destroy the loading screen
-        //     console.log('complete');
-        //     progressBar.destroy();
-        //     progressBox.destroy();
-        // });
-
         //////////
 
         // background images
@@ -48,19 +31,6 @@ class Tutorial extends Phaser.Scene{
         this.load.image('sidewalk', './assets/sidewalk.png');
         this.load.image('day', './assets/day.jpg');
 
-        //////////
-
-        // // load spritesheets
-        // this.load.spritesheet('kittyRun', './assets/miaSprite.png', {
-        //     // frameWidth: 115,
-        //     // frameHeight: 64,
-        //     frameWidth: 128,
-        //     frameHeight: 202,
-        //     startFrame: 0,
-        //     endFrame: 7
-        // });
-
-        // tile map assets
 
 
 
@@ -165,31 +135,16 @@ class Tutorial extends Phaser.Scene{
 
     }
 
-    update(){ // ideally every frame
-        // if (Phaser.Input.Keyboard.JustDown(keyLEFT) || Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-        //     // yasashi modo desu
-        //     game.settings = {
-        //         spaceshipSpeed: 3,
-        //         gameTimer: 600000
-        //     }
-            // this.sound.play('sfx_select');
-            // this.scene.start("artScene");
-        // }
+    update(){ 
 
-        // debug scene change call
 
-        // if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
-
-        //     this.scene.start("artScene");
-
-        // }
+    
 
          // debug scene change call
         this.utilities.sceneChange();
 
         
 
-        // this.utilities.sceneChange();
     }
 }
 
