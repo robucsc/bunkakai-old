@@ -8,27 +8,34 @@ class Tutorial extends Phaser.Scene{
          * Progress bar credit to 
          * https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/
          */
+
+        
         var progressBar = this.add.graphics();//creates progressBar
         var progressBox = this.add.graphics();//boarder around progressBar
         progressBox.fillStyle(0x222222, 0.8);
-        progressBox.fillRect(centerX - 250, centerY + 400, 500, 100);
+        progressBox.fillRect(centerX - 110, centerY + 400, 320, 50);
 
-        this.load.on('progress', function (value) {//uses the built in progress event from Phaser
-            console.log(value);
-            progressBar.clear();
-            progressBar.fillStyle(0xffffff, 1);
-            progressBar.fillRect(centerX - 260, centerY + 410, 300 * value, 100);
-        });
+        // progressBar.clear();
+        progressBar.fillStyle(0xffffff, 1);
+        progressBar.fillRect(centerX - 110, centerY + 400, 300 * .75, 30);
+
+
+        // this.load.on('progress', function (value) {//uses the built in progress event from Phaser
+        //     console.log(value);
+        //     progressBar.clear();
+        //     progressBar.fillStyle(0xffffff, 1);
+        //     progressBar.fillRect(250, 280, 300 * value, 30);
+        // });
                     
-        this.load.on('fileprogress', function (file) {//can be used to display info of each loading file
-            console.log(file.src);
-        });
+        // this.load.on('fileprogress', function (file) {//can be used to display info of each loading file
+        //     console.log(file.src);
+        // });
          
-        this.load.on('complete', function () {//phaser event for end of loading to destroy the loading screen
-            console.log('complete');
-            progressBar.destroy();
-            progressBox.destroy();
-        });
+        // this.load.on('complete', function () {//phaser event for end of loading to destroy the loading screen
+        //     console.log('complete');
+        //     progressBar.destroy();
+        //     progressBox.destroy();
+        // });
 
         //////////
 
@@ -55,16 +62,7 @@ class Tutorial extends Phaser.Scene{
 
         // tile map assets
 
-        //////////
 
-        // art images
-        this.load.image('starryNight', './assets/starryNight.png');
-        this.load.image('fields', './assets/fields.png');
-        this.load.image('bridge', './assets/bridge.png');
-        // particle images
-        this.load.image('circle', './assets/circle-8x8.png');
-
-        //////////
 
         // load audio files
         this.load.audio('sfx_select', './assets/iPhoneCameraSound.mp3')
@@ -92,6 +90,7 @@ class Tutorial extends Phaser.Scene{
         this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'splash_screen').setOrigin(0, 0);
 
         this.scene.remove("bunkakaiScene");
+        this.scene.remove("preloadScene");
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
