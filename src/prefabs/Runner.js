@@ -56,7 +56,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
 
         this.running();
         this.moveForward();
-        // this.direction();
+        this.directionChange();
 
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.jump();
@@ -76,7 +76,6 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         } else {
             this.body.checkCollision.right = true;
         }
-
     }
 
     running(){
@@ -111,7 +110,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
-    direction(){
+    directionChange(){
         if (this.body.velocity.x >= 0){
             this.flipX = false;
         } else if (this.body.velocity.x < 0){
