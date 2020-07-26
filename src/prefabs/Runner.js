@@ -33,14 +33,14 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
             key: 'playerIdleAni',
             frames: this.scene.anims.generateFrameNumbers('playerIdle', {start: 0, end: 3, first: 0}),
             repeat: -1,
-            frameRate: 15
+            frameRate: 1
         });
 
         this.scene.anims.create({
             key: 'playerVictoryAni',
-            frames: this.scene.anims.generateFrameNumbers('playerVictory', {start: 0, end: 4, first: 0}),
+            frames: this.scene.anims.generateFrameNumbers('playerVictory', {start: 0, end: 16, first: 0}),
             repeat: 0,
-            frameRate: 15
+            frameRate: 5
         });
 
         this.scene.anims.create({
@@ -56,6 +56,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
 
         this.running();
         this.moveForward();
+        // this.direction();
 
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.jump();
@@ -107,6 +108,14 @@ class Runner extends Phaser.Physics.Arcade.Sprite{
             console.log('jump two ', this.body.velocity.y)
             this.setVelocityY(this.scene.doublejumpVelocity);
             this.doubleJump = false;
+        }
+    }
+
+    direction(){
+        if (this.body.velocity.x >= 0){
+            this.flipX = false;
+        } else if (this.body.velocity.x < 0){
+            this.flipX = true;
         }
     }
 

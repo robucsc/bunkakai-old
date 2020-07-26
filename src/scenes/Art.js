@@ -40,6 +40,9 @@ class Art extends Phaser.Scene {
         this.miniJumpVelocity = -350;
         this.pixelLength = 15296;
 
+        // set antagonist values
+        this.antagonistAccelerationX = -255
+
         // collectable flight path zones
         this.top = 128;
         this.middle = 320;
@@ -97,16 +100,20 @@ class Art extends Phaser.Scene {
 
         // set collisions
         worldLayer.setCollisionByProperty({ collides: true });
-        this.physics.world.TILE_BIAS = 24;  // increase to prevent sprite tunneling through tiles
+        this.physics.world.TILE_BIAS = 39;  // increase to prevent sprite tunneling through tiles
 
         // add player to scene
         this.playerOne = new Runner(this, 256, 512, 'playerRun', 0, 30, false).setScale(.75, .75).setOrigin(0, 0);
+
+        // add antagonist to the scene
+        this.thief = new Antagonist(this, 1024, 512, 'antagonistRun', 0, 10, true).setScale(1, 1).setOrigin(0,0);
 
         //make the particle emitter follow the player
         // this.collectionParticles.startFollow(this.playerOne);
 
         // add player world collider
         this.physics.add.collider(this.playerOne, worldLayer);
+        this.physics.add.collider(this.thief, worldLayer);
 
         // start playerOne animation
         this.playerOne.anims.play('playerWalkAni');
@@ -197,25 +204,11 @@ class Art extends Phaser.Scene {
             this.gameOver = true;
         }, null, this);
 
-        // Cameras
-        // add motion camera to follow the game play
-        // add( [x] [, y] [, width] [, height] [, makeMain] [, name])
-        // this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
-        // this.motionCamera.startFollow(this.playerOne);
-        // this.motionCamera.followOffset.set(-256, 64);
-        // this.motionCamera.setDeadzone(0, 2048);
-        // this.motionCamera = this.cameras.add(0, 0, viewportW, viewportH).setZoom(1);
+        // Camera
         this.cameras.main.startFollow(this.playerOne);
         this.cameras.main.followOffset.set(-756, 64);
         this.cameras.main.setDeadzone(1280, 1536);
-
-        console.log(this.cameras);
-
-        // the main camera is set as static for UI and backgrounds
-        // Camera ignores - so things only show up where we want
-        // console.log(this.backgoundGroup);
-        // this.motionCamera.ignore([this.scoreLeft, this.backgoundGroup, this.displayKokoro]);
-        // this.cameras.main.ignore([this.playerOne, this.collectableItem, worldLayer,])
+        // console.log(this.cameras);
     }
 
     update() { // ideally every frame
@@ -240,13 +233,17 @@ class Art extends Phaser.Scene {
 
         if (this.playerOne.body.velocity.y != 0){
             this.playerOne.anims.play('playerJumpAni', true);
+        } else  if (this.playerOne.x >= this.pixelLength){
+            this.playerOne.anims.play('playerVictoryAni', true);
+        } else if (this.playerOne.body.velocity.x == 0){
+            this.playerOne.anims.play('playerIdleAni', true);
         } else {
             this.playerOne.anims.play('playerWalkAni', true);
         }
 
-        if (this.playerOne.x == this.pixelLength || this.playerOne.body.velocity.x == 0){
-            this.playerOne.anims.play('playerIdleAni', true);
-        }
+
+
+
 
         // camera zoom testing
         // this.cameras.main.zoomTo(1.5, 1000, 'Sine.easeIn', false);
@@ -254,28 +251,18 @@ class Art extends Phaser.Scene {
         //     this.cameras.main.zoomTo(1, 3000, 'Sine.easeOut', true);
         // }
 
-        // this.sidewalk.tilePositionX += 4;
-        // this.hills.tilePositionX += 1;
-        // this.sky.tilePositionX += 5;
+        // background animation
         this.nightSky.tilePositionX += .5;
 
-        // if (!this.gameOver) {
-        //     // this.myKokoro.update();
-        //     if(Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-        //     this.playerOne.update();        // update playerOne
-        //     }
-        //     this.collectableItem[0].update();
-        //     this.collectableItem[1].update();
-        //     this.collectableItem[2].update();
-        // }
+        // update collectables
+        if (!this.gameOver) {
+            // this.myKokoro.update();
+            this.collectableItem[0].update();
+            this.collectableItem[1].update();
+            this.collectableItem[2].update();
+        }
 
         // crissCross - evasive pattern for collectables
-        // if (this.clock.getElapsedSeconds() > 5) {
-        //     this.crissCross(this.collectableItem[0]);
-        //     this.crissCross(this.collectableItem[1]);
-        //     this.crissCross(this.collectableItem[2]);
-        // }
-
         if (this.clock.getElapsedSeconds() > 5) {
             this.utilities.crissCross(this.collectableItem[0]);
             this.utilities.crissCross(this.collectableItem[1]);
@@ -338,7 +325,7 @@ class Art extends Phaser.Scene {
         collectable.alpha = 0;
         this.p1Score += collectable.points;
         this.scoreLeft.text = this.p1Score;
-        this.centerEmitter.explode(23);
+        // this.centerEmitter.explode(23);
         if (this.kokoros <= 5) {
             this.capturedHearts += 1;
             this.kokoroMeter(this.capturedHearts);

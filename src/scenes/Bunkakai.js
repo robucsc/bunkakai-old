@@ -61,7 +61,7 @@ class Bunkakai extends Phaser.Scene{
             frameWidth: 128,
             frameHeight: 202,
             startFrame: 0,
-            endFrame: 4
+            endFrame: 16
         });
 
         this.load.spritesheet('playerjump', './assets/miaInAir.png', {
@@ -72,7 +72,7 @@ class Bunkakai extends Phaser.Scene{
         });
 
         // thief walk
-        this.load.spritesheet('enemyOneWalk', './assets/thiefWalk.png', {
+        this.load.spritesheet('antagonistWalkAni', './assets/thiefWalk.png', {
             frameWidth: 128,
             frameHeight: 176,
             startFrame: 0,
