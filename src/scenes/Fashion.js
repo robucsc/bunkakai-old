@@ -5,8 +5,31 @@ class Fashion extends Phaser.Scene{
     }
 
     preload() {
+        // load images/tile sprites
+        this.load.image('redHeart', './assets/redHeart.png');
+        this.load.image('sidewalk', './assets/sidewalk.png');
+        this.load.image('hills', './assets/hills.png');
+        this.load.image('day', './assets/day.jpg');
+        this.load.image('nightSky', './assets/starfield.png');
+        this.load.image('circle', './assets/circle-8x8.png');
+        this.load.image('moon', './assets/moon.png');
+        this.load.image('staryNight', './assets/staryNight.png');
+        this.load.image('fields', './assets/fields.png');
+        this.load.image('bridge', './assets/bridge.png');
 
-        
+        // load spritesheets
+        this.load.spritesheet('kittyRun', './assets/miaSprite.png', {
+            // frameWidth: 115,
+            // frameHeight: 64,
+            frameWidth: 128,
+            frameHeight: 202,
+            startFrame: 0,
+            endFrame: 7
+        });
+
+        // tile map assets
+        this.load.image('grass', './assets/grasstp.png');                   // grass tile sheet
+        this.load.tilemapTiledJSON('artMap', './assets/artMap.json');  // Tiled JSON file desu
     }
 
     create() {
