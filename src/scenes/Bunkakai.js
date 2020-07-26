@@ -34,6 +34,7 @@ class Bunkakai extends Phaser.Scene{
         // load audio files
         this.load.audio('sfx_select', './assets/iPhoneCameraSound.mp3');
         this.load.audio('sfx_explosion', './assets/sagoi.wav');
+        this.load.audio('sagoi', './assets/sagoi.wav');
         this.load.audio('sfx_rocket', './assets/yeah.wav');
         this.load.audio('beem', './assets/yeah.wav');
         this.load.audio('artbgm', './assets/artbgm.ogg');
@@ -72,7 +73,7 @@ class Bunkakai extends Phaser.Scene{
         });
 
         // thief walk
-        this.load.spritesheet('antagonistWalkAni', './assets/thiefWalk.png', {
+        this.load.spritesheet('antagonistWalk', './assets/thiefWalk.png', {
             frameWidth: 128,
             frameHeight: 176,
             startFrame: 0,
@@ -93,8 +94,8 @@ class Bunkakai extends Phaser.Scene{
         this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'background').setOrigin(0, 0);
         this.splashScreen = this.add.tileSprite(0, 0, 1912, 1024, 'splash_screen').setOrigin(0, 0);
 
-
-
+        // Camera fade in
+        this.cameras.main.fadeIn(1500, 0, 0, 0)
     }
 
     update(){ // ideally every frame
@@ -104,6 +105,7 @@ class Bunkakai extends Phaser.Scene{
                 spaceshipSpeed: 3,
                 gameTimer: 600000
             }
+            this.cameras.main.fadeOut(1500, 0, 0, 0)
             this.sound.play('sfx_select');
             this.scene.start("artScene");
         }

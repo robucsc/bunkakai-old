@@ -14,7 +14,7 @@ class Antagonist extends Phaser.Physics.Arcade.Sprite{
         this.JUMP_VELOCITY = -650;
 
         this.body.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        this.setVelocityX(this.scene.antagonistAccelerationX);
+        this.setVelocityX(this.scene.antagonistVelocityX);
 
         // allow player to jump through platforms
         this.body.checkCollision.up = false;
@@ -24,7 +24,7 @@ class Antagonist extends Phaser.Physics.Arcade.Sprite{
         // playerOne animation config
         this.scene.anims.create({
             key: 'antagonistWalkAni',
-            frames: this.scene.anims.generateFrameNumbers('playerRun', {start: 0, end: 3, first: 0}),
+            frames: this.scene.anims.generateFrameNumbers('antagonistWalk', {start: 0, end: 3, first: 0}),
             repeat: -1,
             frameRate: 15
         });
